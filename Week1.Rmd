@@ -9,13 +9,13 @@ output:
 ---
 
 ### Load Libraries
-```{r} Load Libraries
+```{r Load Libraries} 
 library(tidycensus)
 library(tidyverse)
 ```
 
 ### Mass Renters
-```{r} My Data for Mass Renters
+```{r Mass Renters} 
 hh_data_MA <- get_pums(variables = c("TEN", 
                                   "YBL", 
                                   "BDSP", 
@@ -65,6 +65,6 @@ hh_data_MA <- get_pums(variables = c("TEN",
   
 ### Save Dataset
 
-```{r} Save Dataset
+```{r Save Dataset} 
 write_csv(hh_data_MA, "households.csv")
 ```
