@@ -66,5 +66,5 @@ hh_data_MA <- get_pums(variables = c("TEN",
 ### Save Dataset
 
 ```{r Save Dataset} 
-write_csv(hh_data_MA, "households.csv")
+write_csv(hh_data_MA, "households_ma.csv")
 ```
