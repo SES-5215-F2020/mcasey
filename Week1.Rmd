@@ -9,13 +9,13 @@ output:
 ---
 
 ### Load Libraries
-```{r Load Libraries} 
+```{r Load Libraries, message=FALSE} 
 library(tidycensus)
 library(tidyverse)
 ```
 
 ### Mass Renters
-```{r Mass Renters} 
+```{r Mass Renters data filtered, message=FALSE, results='hide'} 
 hh_data_MA <- get_pums(variables = c("TEN", 
                                   "YBL", 
                                   "BDSP", 
