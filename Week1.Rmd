@@ -1,12 +1,24 @@
 ---
 title: "Assignment 1: Identify a Dataset"
 author: "Meghan Casey"
-date: September 3, 2020
+date: September 10, 2020
 output: 
   html_document:
     theme: "cosmo" 
     highlight: "tango"
 ---
+### Variables of Interest
+Unit  of analysis: Household
+
+Population: Renters in Massachusetts
+
+1. Household Type (categorical): hh_type
+2. Number of Units within Building (categorical): num_units
+3. Age of Building (continuous): age_struct
+4. Number of Bedrooms (continuous): bedrooms
+5. Number of People (continuous): num_persons
+6. Time Lived There (continuous): move_in
+7. Gross Rent (continuous): gross_rent
 
 ### Load Libraries
 ```{r Load Libraries, message=FALSE} 
@@ -14,7 +26,15 @@ library(tidycensus)
 library(tidyverse)
 ```
 
-### Mass Renters
+### Get Data
+```{r Get Data, message=FALSE}
+hh_vars_2018 <- pums_variables %>%
+  distinct(year, survey, var_code, 
+           var_label, data_type, level) %>%
+  filter(level == "housing", year == 2018, survey == "acs1")
+```
+
+### Mass Renters Data Selection
 ```{r Mass Renters data filtered, message=FALSE, results='hide'} 
 hh_data_MA <- get_pums(variables = c("TEN", 
                                   "YBL", 
@@ -38,32 +58,44 @@ hh_data_MA <- get_pums(variables = c("TEN",
     YBL_label == "1980 to 1989" ~ 33,
     YBL_label == "1990 to 1999" ~ 23,
     YBL_label == "2000 to 2004" ~ 16,
-    YBL_label == "2005" ~ 13,
-    YBL_label == "2006" ~ 12,
-    YBL_label == "2007" ~ 11,
-    YBL_label == "2008" ~ 10,
-    YBL_label == "2009" ~ 9,
-    YBL_label == "2010" ~ 8,
-    YBL_label == "2011" ~ 7,
-    YBL_label == "2012" ~ 6,
-    YBL_label == "2013" ~ 5,
-    YBL_label == "2014" ~ 4,
-    YBL_label == "2015" ~ 3,
-    YBL_label == "2016" ~ 2,
-    YBL_label == "2017" ~ 1,
-    YBL_label == "2018" ~ 0)) %>%
-    mutate(move_in = case_when(
-    MV_label == "10 to 19 years" ~ 15,
+    YBL_label == "2005" ~ 15,
+    YBL_label == "2006" ~ 14,
+    YBL_label == "2007" ~ 13,
+    YBL_label == "2008" ~ 12,
+    YBL_label == "2009" ~ 11,
+    YBL_label == "2010" ~ 10,
+    YBL_label == "2011" ~ 9,
+    YBL_label == "2012" ~ 8,
+    YBL_label == "2013" ~ 7,
+    YBL_label == "2014" ~ 6,
+    YBL_label == "2015" ~ 5,
+    YBL_label == "2016" ~ 4,
+    YBL_label == "2017" ~ 3,
+    YBL_label == "2018" ~ 2)) %>%
+  
+  mutate(bedrooms = BDSP,
+         gross_rent = GRNTP,
+         num_persons = NP,
+         hh_type = HHT,
+         num_units = BLD)%>%
+  
+  mutate(move_in = case_when(
     MV_label == "12 months or less" ~ 1,
     MV_label == "13 to 23 months" ~ 2,
     MV_label == "2 to 4 years" ~ 3,
+    MV_label == "5 to 9 years" ~ 7,
+    MV_label == "10 to 19 years" ~ 15,
     MV_label == "20 to 29 years" ~ 25,
-    MV_label == "30 years or more" ~ 30,
-    MV_label == "5 to 9 years" ~ 7)) %>%
-  select(age_struct, BDSP, GRNTP, BLD_label, NP, move_in, HHT_label)
+    MV_label == "30 years or more" ~ 30)) %>%
+  select(age_struct, bedrooms, num_units, gross_rent, num_persons, move_in, hh_type)
 ```
-  
-### Save Dataset
+
+I created my dataset that includes 17,922 observations, meaning 17,922 households. I looked at Sara Arman's rmd file to limit the preview of data to a specific number of rows. Here are the first 5 rows of data:
+```{r}
+head (hh_data_MA, 5)
+```
+
+### Save Dataset as CSV
 
 ```{r Save Dataset} 
 write_csv(hh_data_MA, "households_ma.csv")

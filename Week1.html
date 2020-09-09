@@ -11,7 +11,7 @@
 
 <meta name="author" content="Meghan Casey" />
 
-<meta name="date" content="2020-09-03" />
+<meta name="date" content="2020-09-10" />
 
 <title>Assignment 1: Identify a Dataset</title>
 
@@ -457,67 +457,105 @@ summary {
 
 <h1 class="title toc-ignore">Assignment 1: Identify a Dataset</h1>
 <h4 class="author">Meghan Casey</h4>
-<h4 class="date">September 3, 2020</h4>
+<h4 class="date">September 10, 2020</h4>
 
 </div>
 
 
+<div id="variables-of-interest" class="section level3">
+<h3>Variables of Interest</h3>
+<p>Unit of analysis: Household</p>
+<p>Population: Renters in Massachusetts</p>
+<ol style="list-style-type: decimal">
+<li>Household Type (categorical): hh_type</li>
+<li>Number of Units within Building (categorical): num_units</li>
+<li>Age of Building (continuous): age_struct</li>
+<li>Number of Bedrooms (continuous): bedrooms</li>
+<li>Number of People (continuous): num_persons</li>
+<li>Time Lived There (continuous): move_in</li>
+<li>Gross Rent (continuous): gross_rent</li>
+</ol>
+</div>
 <div id="load-libraries" class="section level3">
 <h3>Load Libraries</h3>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(tidycensus)</span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="kw">library</span>(tidyverse)</span></code></pre></div>
 </div>
-<div id="mass-renters" class="section level3">
-<h3>Mass Renters</h3>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>hh_data_MA &lt;-<span class="st"> </span><span class="kw">get_pums</span>(<span class="dt">variables =</span> <span class="kw">c</span>(<span class="st">&quot;TEN&quot;</span>, </span>
-<span id="cb2-2"><a href="#cb2-2"></a>                                  <span class="st">&quot;YBL&quot;</span>, </span>
-<span id="cb2-3"><a href="#cb2-3"></a>                                  <span class="st">&quot;BDSP&quot;</span>, </span>
-<span id="cb2-4"><a href="#cb2-4"></a>                                  <span class="st">&quot;GRNTP&quot;</span>, </span>
-<span id="cb2-5"><a href="#cb2-5"></a>                                  <span class="st">&quot;BLD&quot;</span>,</span>
-<span id="cb2-6"><a href="#cb2-6"></a>                                  <span class="st">&quot;NP&quot;</span>,</span>
-<span id="cb2-7"><a href="#cb2-7"></a>                                  <span class="st">&quot;MV&quot;</span>,</span>
-<span id="cb2-8"><a href="#cb2-8"></a>                                  <span class="st">&quot;HHT&quot;</span>),</span>
-<span id="cb2-9"><a href="#cb2-9"></a>                        <span class="dt">state =</span> <span class="st">&quot;MA&quot;</span>,</span>
-<span id="cb2-10"><a href="#cb2-10"></a>                        <span class="dt">year =</span> <span class="dv">2018</span>, </span>
-<span id="cb2-11"><a href="#cb2-11"></a>                        <span class="dt">survey =</span> <span class="st">&quot;acs1&quot;</span>,</span>
-<span id="cb2-12"><a href="#cb2-12"></a>                        <span class="dt">recode =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
-<span id="cb2-13"><a href="#cb2-13"></a><span class="st">  </span><span class="kw">filter</span>(TEN_label <span class="op">==</span><span class="st"> &quot;Rented&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb2-14"><a href="#cb2-14"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">age_struct =</span> <span class="kw">case_when</span>(</span>
-<span id="cb2-15"><a href="#cb2-15"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;1939 or earlier&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">100</span>,</span>
-<span id="cb2-16"><a href="#cb2-16"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;1940 to 1949&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">73</span>,</span>
-<span id="cb2-17"><a href="#cb2-17"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;1950 to 1959&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">63</span>,</span>
-<span id="cb2-18"><a href="#cb2-18"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;1960 to 1969&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">53</span>,</span>
-<span id="cb2-19"><a href="#cb2-19"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;1970 to 1979&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">43</span>,</span>
-<span id="cb2-20"><a href="#cb2-20"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;1980 to 1989&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">33</span>,</span>
-<span id="cb2-21"><a href="#cb2-21"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;1990 to 1999&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">23</span>,</span>
-<span id="cb2-22"><a href="#cb2-22"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;2000 to 2004&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">16</span>,</span>
-<span id="cb2-23"><a href="#cb2-23"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;2005&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">13</span>,</span>
-<span id="cb2-24"><a href="#cb2-24"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;2006&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">12</span>,</span>
-<span id="cb2-25"><a href="#cb2-25"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;2007&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">11</span>,</span>
-<span id="cb2-26"><a href="#cb2-26"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;2008&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">10</span>,</span>
-<span id="cb2-27"><a href="#cb2-27"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;2009&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">9</span>,</span>
-<span id="cb2-28"><a href="#cb2-28"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;2010&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">8</span>,</span>
-<span id="cb2-29"><a href="#cb2-29"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;2011&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">7</span>,</span>
-<span id="cb2-30"><a href="#cb2-30"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;2012&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">6</span>,</span>
-<span id="cb2-31"><a href="#cb2-31"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;2013&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">5</span>,</span>
-<span id="cb2-32"><a href="#cb2-32"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;2014&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">4</span>,</span>
-<span id="cb2-33"><a href="#cb2-33"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;2015&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">3</span>,</span>
-<span id="cb2-34"><a href="#cb2-34"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;2016&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">2</span>,</span>
-<span id="cb2-35"><a href="#cb2-35"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;2017&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">1</span>,</span>
-<span id="cb2-36"><a href="#cb2-36"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;2018&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb2-37"><a href="#cb2-37"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">move_in =</span> <span class="kw">case_when</span>(</span>
-<span id="cb2-38"><a href="#cb2-38"></a>    MV_label <span class="op">==</span><span class="st"> &quot;10 to 19 years&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">15</span>,</span>
-<span id="cb2-39"><a href="#cb2-39"></a>    MV_label <span class="op">==</span><span class="st"> &quot;12 months or less&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">1</span>,</span>
-<span id="cb2-40"><a href="#cb2-40"></a>    MV_label <span class="op">==</span><span class="st"> &quot;13 to 23 months&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">2</span>,</span>
-<span id="cb2-41"><a href="#cb2-41"></a>    MV_label <span class="op">==</span><span class="st"> &quot;2 to 4 years&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">3</span>,</span>
-<span id="cb2-42"><a href="#cb2-42"></a>    MV_label <span class="op">==</span><span class="st"> &quot;20 to 29 years&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">25</span>,</span>
-<span id="cb2-43"><a href="#cb2-43"></a>    MV_label <span class="op">==</span><span class="st"> &quot;30 years or more&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">30</span>,</span>
-<span id="cb2-44"><a href="#cb2-44"></a>    MV_label <span class="op">==</span><span class="st"> &quot;5 to 9 years&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">7</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb2-45"><a href="#cb2-45"></a><span class="st">  </span><span class="kw">select</span>(age_struct, BDSP, GRNTP, BLD_label, NP, move_in, HHT_label)</span></code></pre></div>
+<div id="get-data" class="section level3">
+<h3>Get Data</h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>hh_vars_<span class="dv">2018</span> &lt;-<span class="st"> </span>pums_variables <span class="op">%&gt;%</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="st">  </span><span class="kw">distinct</span>(year, survey, var_code, </span>
+<span id="cb2-3"><a href="#cb2-3"></a>           var_label, data_type, level) <span class="op">%&gt;%</span></span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="st">  </span><span class="kw">filter</span>(level <span class="op">==</span><span class="st"> &quot;housing&quot;</span>, year <span class="op">==</span><span class="st"> </span><span class="dv">2018</span>, survey <span class="op">==</span><span class="st"> &quot;acs1&quot;</span>)</span></code></pre></div>
 </div>
-<div id="save-dataset" class="section level3">
-<h3>Save Dataset</h3>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">write_csv</span>(hh_data_MA, <span class="st">&quot;households_ma.csv&quot;</span>)</span></code></pre></div>
+<div id="mass-renters-data-selection" class="section level3">
+<h3>Mass Renters Data Selection</h3>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>hh_data_MA &lt;-<span class="st"> </span><span class="kw">get_pums</span>(<span class="dt">variables =</span> <span class="kw">c</span>(<span class="st">&quot;TEN&quot;</span>, </span>
+<span id="cb3-2"><a href="#cb3-2"></a>                                  <span class="st">&quot;YBL&quot;</span>, </span>
+<span id="cb3-3"><a href="#cb3-3"></a>                                  <span class="st">&quot;BDSP&quot;</span>, </span>
+<span id="cb3-4"><a href="#cb3-4"></a>                                  <span class="st">&quot;GRNTP&quot;</span>, </span>
+<span id="cb3-5"><a href="#cb3-5"></a>                                  <span class="st">&quot;BLD&quot;</span>,</span>
+<span id="cb3-6"><a href="#cb3-6"></a>                                  <span class="st">&quot;NP&quot;</span>,</span>
+<span id="cb3-7"><a href="#cb3-7"></a>                                  <span class="st">&quot;MV&quot;</span>,</span>
+<span id="cb3-8"><a href="#cb3-8"></a>                                  <span class="st">&quot;HHT&quot;</span>),</span>
+<span id="cb3-9"><a href="#cb3-9"></a>                        <span class="dt">state =</span> <span class="st">&quot;MA&quot;</span>,</span>
+<span id="cb3-10"><a href="#cb3-10"></a>                        <span class="dt">year =</span> <span class="dv">2018</span>, </span>
+<span id="cb3-11"><a href="#cb3-11"></a>                        <span class="dt">survey =</span> <span class="st">&quot;acs1&quot;</span>,</span>
+<span id="cb3-12"><a href="#cb3-12"></a>                        <span class="dt">recode =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb3-13"><a href="#cb3-13"></a><span class="st">  </span><span class="kw">filter</span>(TEN_label <span class="op">==</span><span class="st"> &quot;Rented&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb3-14"><a href="#cb3-14"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">age_struct =</span> <span class="kw">case_when</span>(</span>
+<span id="cb3-15"><a href="#cb3-15"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;1939 or earlier&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">100</span>,</span>
+<span id="cb3-16"><a href="#cb3-16"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;1940 to 1949&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">73</span>,</span>
+<span id="cb3-17"><a href="#cb3-17"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;1950 to 1959&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">63</span>,</span>
+<span id="cb3-18"><a href="#cb3-18"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;1960 to 1969&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">53</span>,</span>
+<span id="cb3-19"><a href="#cb3-19"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;1970 to 1979&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">43</span>,</span>
+<span id="cb3-20"><a href="#cb3-20"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;1980 to 1989&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">33</span>,</span>
+<span id="cb3-21"><a href="#cb3-21"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;1990 to 1999&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">23</span>,</span>
+<span id="cb3-22"><a href="#cb3-22"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;2000 to 2004&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">16</span>,</span>
+<span id="cb3-23"><a href="#cb3-23"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;2005&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">15</span>,</span>
+<span id="cb3-24"><a href="#cb3-24"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;2006&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">14</span>,</span>
+<span id="cb3-25"><a href="#cb3-25"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;2007&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">13</span>,</span>
+<span id="cb3-26"><a href="#cb3-26"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;2008&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">12</span>,</span>
+<span id="cb3-27"><a href="#cb3-27"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;2009&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">11</span>,</span>
+<span id="cb3-28"><a href="#cb3-28"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;2010&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">10</span>,</span>
+<span id="cb3-29"><a href="#cb3-29"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;2011&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">9</span>,</span>
+<span id="cb3-30"><a href="#cb3-30"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;2012&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">8</span>,</span>
+<span id="cb3-31"><a href="#cb3-31"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;2013&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">7</span>,</span>
+<span id="cb3-32"><a href="#cb3-32"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;2014&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">6</span>,</span>
+<span id="cb3-33"><a href="#cb3-33"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;2015&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">5</span>,</span>
+<span id="cb3-34"><a href="#cb3-34"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;2016&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">4</span>,</span>
+<span id="cb3-35"><a href="#cb3-35"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;2017&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">3</span>,</span>
+<span id="cb3-36"><a href="#cb3-36"></a>    YBL_label <span class="op">==</span><span class="st"> &quot;2018&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">2</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb3-37"><a href="#cb3-37"></a><span class="st">  </span></span>
+<span id="cb3-38"><a href="#cb3-38"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">bedrooms =</span> BDSP,</span>
+<span id="cb3-39"><a href="#cb3-39"></a>         <span class="dt">gross_rent =</span> GRNTP,</span>
+<span id="cb3-40"><a href="#cb3-40"></a>         <span class="dt">num_persons =</span> NP,</span>
+<span id="cb3-41"><a href="#cb3-41"></a>         <span class="dt">hh_type =</span> HHT,</span>
+<span id="cb3-42"><a href="#cb3-42"></a>         <span class="dt">num_units =</span> BLD)<span class="op">%&gt;%</span></span>
+<span id="cb3-43"><a href="#cb3-43"></a><span class="st">  </span></span>
+<span id="cb3-44"><a href="#cb3-44"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">move_in =</span> <span class="kw">case_when</span>(</span>
+<span id="cb3-45"><a href="#cb3-45"></a>    MV_label <span class="op">==</span><span class="st"> &quot;12 months or less&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">1</span>,</span>
+<span id="cb3-46"><a href="#cb3-46"></a>    MV_label <span class="op">==</span><span class="st"> &quot;13 to 23 months&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">2</span>,</span>
+<span id="cb3-47"><a href="#cb3-47"></a>    MV_label <span class="op">==</span><span class="st"> &quot;2 to 4 years&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">3</span>,</span>
+<span id="cb3-48"><a href="#cb3-48"></a>    MV_label <span class="op">==</span><span class="st"> &quot;5 to 9 years&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">7</span>,</span>
+<span id="cb3-49"><a href="#cb3-49"></a>    MV_label <span class="op">==</span><span class="st"> &quot;10 to 19 years&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">15</span>,</span>
+<span id="cb3-50"><a href="#cb3-50"></a>    MV_label <span class="op">==</span><span class="st"> &quot;20 to 29 years&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">25</span>,</span>
+<span id="cb3-51"><a href="#cb3-51"></a>    MV_label <span class="op">==</span><span class="st"> &quot;30 years or more&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">30</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb3-52"><a href="#cb3-52"></a><span class="st">  </span><span class="kw">select</span>(age_struct, bedrooms, num_units, gross_rent, num_persons, move_in, hh_type)</span></code></pre></div>
+<p>I created my dataset that includes 17,922 observations, meaning 17,922 households. I looked at Sara Arman’s rmd file to limit the preview of data to a specific number of rows. Here are the first 5 rows of data:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">head</span> (hh_data_MA, <span class="dv">5</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 5 x 7
+##   age_struct bedrooms num_units gross_rent num_persons move_in hh_type
+##        &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;          &lt;dbl&gt;       &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;  
+## 1          5        2 09              2503           2       1 5      
+## 2          5        2 09              2503           2       1 5      
+## 3         23        3 05              2542           1       7 6      
+## 4          8        1 09              1824           2       1 7      
+## 5          8        1 09              1824           2       1 7</code></pre>
+</div>
+<div id="save-dataset-as-csv" class="section level3">
+<h3>Save Dataset as CSV</h3>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">write_csv</span>(hh_data_MA, <span class="st">&quot;households_ma.csv&quot;</span>)</span></code></pre></div>
 </div>
 
 
