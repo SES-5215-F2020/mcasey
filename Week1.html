@@ -541,17 +541,17 @@ summary {
 <span id="cb3-49"><a href="#cb3-49"></a>    MV_label <span class="op">==</span><span class="st"> &quot;10 to 19 years&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">15</span>,</span>
 <span id="cb3-50"><a href="#cb3-50"></a>    MV_label <span class="op">==</span><span class="st"> &quot;20 to 29 years&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">25</span>,</span>
 <span id="cb3-51"><a href="#cb3-51"></a>    MV_label <span class="op">==</span><span class="st"> &quot;30 years or more&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">30</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb3-52"><a href="#cb3-52"></a><span class="st">  </span><span class="kw">select</span>(age_struct, bedrooms, num_units, gross_rent, num_persons, move_in, hh_type)</span></code></pre></div>
+<span id="cb3-52"><a href="#cb3-52"></a><span class="st">  </span><span class="kw">select</span>(age_struct, bedrooms, BLD_label, gross_rent, num_persons, move_in, HHT_label)</span></code></pre></div>
 <p>I created my dataset that includes 17,922 observations, meaning 17,922 households. I looked at Sara Arman’s rmd file to limit the preview of data to a specific number of rows. Here are the first 5 rows of data:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">head</span> (hh_data_MA, <span class="dv">5</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 5 x 7
-##   age_struct bedrooms num_units gross_rent num_persons move_in hh_type
-##        &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;          &lt;dbl&gt;       &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;  
-## 1          5        2 09              2503           2       1 5      
-## 2          5        2 09              2503           2       1 5      
-## 3         23        3 05              2542           1       7 6      
-## 4          8        1 09              1824           2       1 7      
-## 5          8        1 09              1824           2       1 7</code></pre>
+##   age_struct bedrooms BLD_label   gross_rent num_persons move_in HHT_label      
+##        &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;            &lt;dbl&gt;       &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;          
+## 1          5        2 50 or more~       2503           2       1 Nonfamily hous~
+## 2          5        2 50 or more~       2503           2       1 Nonfamily hous~
+## 3         23        3 3-4 Apartm~       2542           1       7 Nonfamily hous~
+## 4          8        1 50 or more~       1824           2       1 Nonfamily hous~
+## 5          8        1 50 or more~       1824           2       1 Nonfamily hous~</code></pre>
 </div>
 <div id="save-dataset-as-csv" class="section level3">
 <h3>Save Dataset as CSV</h3>

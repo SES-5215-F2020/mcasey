@@ -87,7 +87,7 @@ hh_data_MA <- get_pums(variables = c("TEN",
     MV_label == "10 to 19 years" ~ 15,
     MV_label == "20 to 29 years" ~ 25,
     MV_label == "30 years or more" ~ 30)) %>%
-  select(age_struct, bedrooms, num_units, gross_rent, num_persons, move_in, hh_type)
+  select(age_struct, bedrooms, BLD_label, gross_rent, num_persons, move_in, HHT_label)
 ```
 
 I created my dataset that includes 17,922 observations, meaning 17,922 households. I looked at Sara Arman's rmd file to limit the preview of data to a specific number of rows. Here are the first 5 rows of data:
