@@ -1,0 +1,358 @@
+---
+title: "Assignment 2: Distributions and Proportions"
+author: "Meghan Casey"
+date: September 17, 2020
+output: 
+  html_document:
+    theme: "cosmo" 
+    highlight: "tango"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Variables of Interest
+Unit  of analysis: Household
+
+Population: Renters in Massachusetts
+
+1. Household Type (categorical): hh_type
+2. Number of Units within Building (categorical): num_units
+3. Age of Building (continuous): age_struct
+4. Number of Bedrooms (continuous): bedrooms
+5. Number of People (continuous): num_persons
+6. Time Lived There (continuous): move_in
+7. Gross Rent (continuous): gross_rent
+
+### Load Libraries
+```{r Load Libraries, message = FALSE}
+library(tidyverse)
+library(ggplot2)
+```
+
+### Load Data
+```{r Load Data, message = FALSE}
+hh_data <- read_csv("households_ma.csv")
+attach(hh_data)
+```
+
+## Distribution of Continuous Variables
+### Summary of Statistics
+```{r summary stats}
+age_summary <- summary(age_struct)
+age_sd <- sd(age_struct, na.rm = TRUE)
+age_pop_mean_int <- t.test(age_struct)
+bed_summary <- summary(bedrooms)
+bed_sd <- sd(bedrooms, na.rm = TRUE)
+bed_pop_mean_int <- t.test(bedrooms)
+ppl_summary <- summary(num_persons)
+ppl_sd <- sd(num_persons, na.rm = TRUE)
+ppl_pop_mean_int <- t.test(num_persons)
+live_summary <- summary(move_in)
+live_sd <- sd(move_in, na.rm = TRUE)
+live_pop_mean_int <- t.test(move_in)
+rent_summary <- summary(gross_rent)
+rent_sd <- sd(gross_rent, na.rm = TRUE)
+rent_pop_mean_int <- t.test(gross_rent)
+```
+
+``` {r summary table}
+summary_table <- tibble(
+  Statistic = c("Sample mean", 
+                "Median",
+                "Standard deviation",
+                "Interquartile range",
+                "Population mean (95% confidence)"),
+  `Age of Structure (years)` = c(prettyNum(age_summary["Mean"], digits = 3),
+                           age_summary["Median"],
+                           prettyNum(age_sd, digits = 3),
+                           paste(age_summary["1st Qu."],"to", 
+                                 age_summary["3rd Qu."]),
+                           paste(prettyNum(age_pop_mean_int$conf.int[1],
+                                           digits = 2), "to",
+                                 prettyNum(age_pop_mean_int$conf.int[2],
+                                               digits = 3))),
+  
+  `Number of Bedrooms` = c(prettyNum(bed_summary["Mean"], digits = 3),
+                           bed_summary["Median"],
+                           prettyNum(bed_sd, digits = 3),
+                           paste(bed_summary["1st Qu."],"to", 
+                                 bed_summary["3rd Qu."]),
+                           paste(prettyNum(bed_pop_mean_int$conf.int[1],
+                                           digits = 3), "to",
+                                 prettyNum(bed_pop_mean_int$conf.int[2],
+                                               digits = 3))),
+  
+  `Number of Residents` = c(prettyNum(ppl_summary["Mean"], digits = 3),
+                           ppl_summary["Median"],
+                           prettyNum(ppl_sd, digits = 3),
+                           paste(ppl_summary["1st Qu."],"to", 
+                                 ppl_summary["3rd Qu."]),
+                           paste(prettyNum(ppl_pop_mean_int$conf.int[1],
+                                           digits=3), "to",
+                                 prettyNum(ppl_pop_mean_int$conf.int[2],
+                                               digits=3))),
+  
+  `Years lived at House` = c(prettyNum(live_summary["Mean"], digits = 3),
+                           live_summary["Median"],
+                           prettyNum(live_sd, digits = 3),
+                           paste(live_summary["1st Qu."],"to", 
+                                 live_summary["3rd Qu."]),
+                           paste(prettyNum(live_pop_mean_int$conf.int[1],
+                                           digits = 3), "to",
+                                 prettyNum(live_pop_mean_int$conf.int[2],
+                                               digits = 3))),
+  
+  `Gross Rent` = c(prettyNum(rent_summary["Mean"], digits=3),
+                           rent_summary["Median"],
+                           prettyNum(rent_sd, digits = 3),
+                           paste(rent_summary["1st Qu."],"to", 
+                                 rent_summary["3rd Qu."]),
+                           paste(prettyNum(rent_pop_mean_int$conf.int[1],
+                                           digits=3), "to",
+                                 prettyNum(rent_pop_mean_int$conf.int[2],
+                                               digits=3))))
+
+  knitr::kable(summary_table, 
+             caption = "Characteristics of rented households in Massachusetts")
+```
+
+### Histograms
+
+#### Age of Structure
+```{r age_struct histogram}
+ggplot(hh_data,
+                   aes(x = age_struct)) +
+  geom_histogram(color= "white", size = 1, fill = "paleturquoise4", binwidth = 5) +
+  theme_gray() +
+  scale_x_continuous(name = "Age of Building (years)") +
+  scale_y_continuous(name = "Number of Houses in Sample") +
+  annotate("text", x = 0, y = 6500, size = 3,
+           label = paste("Population Mean (95% confidence): 63 to 63.9 years.
+Sample Mean: 63.5 years.
+Sample Median: 63 years.
+Sample Standard Deviation: 32.3 years.
+Sample Interquartile Range: 33 to 100 years."),
+           hjust = 0, vjust = 1)
+
+```
+
+
+#### Number of Bedrooms
+```{r bedrooms histogram}
+ggplot(hh_data,
+                   aes(x = bedrooms)) +
+  geom_histogram(color= "white", size = 1, fill = "lightgoldenrod2", binwidth = 1) +
+  theme_gray() +
+  scale_x_continuous(name = "Number of Bedrooms in Household") +
+  scale_y_continuous(name = "Number of Houses in Sample") +
+  annotate("text", x = 3, y = 7000, size = 3,
+           label = paste("Population Mean (95% confidence): 2.18 to 2.21 rooms.
+Sample Mean: 2.2 rooms.
+Sample Median: 2 rooms.
+Sample Standard Deviation: 1.05 rooms.
+Sample Interquartile Range: 2 to 3 rooms."),
+           hjust = 0, vjust = 1)
+
+```
+
+The distribution of number of bedrooms is relatively normal, with a slight right skew. The mean is higher than the median due to the outliers at 6 bedrooms.
+
+#### Number of People in Household
+```{r people histogram}
+ggplot(hh_data,
+                   aes(x = num_persons)) +
+  geom_histogram(color= "white", size = 1, fill = "azure3", binwidth = 1) +
+  theme_gray() +
+  scale_x_continuous(name = "Number of People in Household") +
+  scale_y_continuous(name = "Number of Houses in Sample") +
+  annotate("text", x = 7, y = 7000, size = 3,
+           label = paste("Population Mean (95% confidence): 2.83 to 2.88 people.
+Sample Mean: 2.85 people.
+Sample Median: 3 people.
+Sample Standard Deviation: 1.56 people.
+Sample Interquartile Range: 2 to 4 people."),
+           hjust = 0, vjust = 1)
+```
+
+The distribution of the number of people in households has a right skew with a long tail. Half of households consist of 2 to 4 people. 
+
+#### Years lived at Household
+```{r move histogram}
+ggplot(hh_data,
+                   aes(x = move_in)) +
+  geom_histogram(color= "white", size = 1, fill = "honeydew3", binwidth = 3) +
+  theme_gray() +
+  scale_x_continuous(name = "Years Lived at Household") +
+  scale_y_continuous(name = "Number of Houses in Sample") +
+  annotate("text", x = 15, y = 7000, size = 3,
+           label = paste("Population Mean (95% confidence): 5.6 to 5.79 years.
+Sample Mean: 5.69 years.
+Sample Median: 3 years.
+Sample Standard Deviation: 6.54 years.
+Sample Interquartile Range: 2 to 7 years."),
+           hjust = 0, vjust = 1)
+```
+
+#### Gross Rent
+```{r rent histogram}
+ggplot(hh_data,
+                   aes(x = gross_rent)) +
+  geom_histogram(color= "white", size = 1, fill = "coral1", binwidth = 200) +
+  theme_gray() +
+  scale_x_continuous(name = "Gross Rent") +
+  scale_y_continuous(name = "Number of Houses in Sample") +
+  annotate("text", x = 15, y = 6500, size = 3,
+           label = paste("Population Mean (95% confidence): $1,539 to $1,563 per month.
+Sample Mean: $1,551 per month.
+Sample Median: $1,440 per month.
+Sample Standard Deviation: $825 per month.
+Sample Interquartile Range: $980 to $2,020 per month."),
+           hjust = 0, vjust = 1)
+```
+
+## Distribution of Categorical Variables
+#### Household Types
+```{r all possible values hh_type}
+household_types <- unique(HHT_label)
+household_types
+```
+```{r share hh_type}
+married_couple <- t.test(HHT_label == household_types[5])
+non_family_m <- t.test(HHT_label == household_types[1])
+non_family_f <- t.test(HHT_label == household_types[2])
+living_alone_m <- t.test(HHT_label == household_types[4])
+living_alone_f <- t.test(HHT_label == household_types[2])
+other_family_f <- t.test(HHT_label == household_types[6])
+other_family_m <- t.test(HHT_label == household_types[7])
+shares <- tibble(Household_Type = c("Married Couple",
+                                    "Non-Family Male",
+                                    "Non-Family Female",
+                                    "Living Alone Male",
+                                    "Living Alone Female",
+                                    "Other Family Male",
+                                    "Other Family Female"),
+                 `Share` = c(married_couple$estimate,
+                             non_family_m$estimate,
+                             non_family_f$estimate,
+                             living_alone_m$estimate,
+                             living_alone_f$estimate,
+                             other_family_m$estimate,
+                             other_family_f$estimate),
+                 Low = c(married_couple$conf.int[1],
+                         non_family_m$conf.int[1],
+                         non_family_f$conf.int[1],
+                         living_alone_m$conf.int[1],
+                         living_alone_f$conf.int[1],
+                         other_family_m$conf.int[1],
+                         other_family_f$conf.int[1]),
+                  High = c(married_couple$conf.int[2],
+                         non_family_m$conf.int[2],
+                         non_family_f$conf.int[2],
+                         living_alone_m$conf.int[2],
+                         living_alone_f$conf.int[2],
+                         other_family_m$conf.int[2],
+                         other_family_f$conf.int[2]),)
+knitr::kable(shares,caption = "Proportions and 95-Percent Confidence Intervals")
+```
+
+```{r bar chart hh_Type}
+ggplot(shares, aes(x = household_types, y = Share, ymin = Low, ymax = High)) +
+  geom_bar(stat = "identity", color = "white", size = 1, fill = "olivedrab4") +
+  geom_errorbar(width = 0.5) +
+  theme_gray() +
+  scale_x_discrete(name = "Household Type", labels = c("Living Alone\n Female",
+                                    "Non-Family\n Male",
+                                    "Non-Family\n Female",
+                                    "Living Alone\n Male",
+                                    "Married Couple",
+                                    "Other Family\n Male",
+                                    "Other Family\n Female")) +
+  scale_y_continuous(name = "Share of population (error bars represent\n 95-percent confidence interval)",
+                     breaks = c(0, 0.1, 0.2, 0.3, 0.4, 0.5),
+                     labels = c("0", "10%", "20%", "30%", "40%", "50%"))
+```
+
+## Number of Units in Building
+```{r all possible values units}
+units <- unique(BLD_label)
+units
+```
+```{r}
+table(hh_data$BLD_label)
+```
+
+```{r share units}
+two <- t.test(BLD_label == units[5])
+three_4 <- t.test(BLD_label == units[2])
+five_9 <- t.test(BLD_label == units[4])
+ten_19 <- t.test(BLD_label == units[3])
+twenty_49 <- t.test(BLD_label == units[6])
+fifty <- t.test(BLD_label == units[1])
+one_detached <- t.test(BLD_label == units[7])
+one_attached <- t.test(BLD_label == units[8])
+mobile <- t.test(BLD_label == units[9])
+boat_rv <- t.test(BLD_label == units[10])
+shares <- tibble(units = c("2 Apartments",
+                                   "3-4 Apartments",
+                                   "5-9 Apartments",
+                                   "10-19 Apartments",
+                                   "20-49 Apartments",
+                                   "50 or more apartments",
+                                   "One-family house detached",
+                                   "One-family house attached",
+                                   "Mobile home or trailer"   ,
+                                   "Boat, RV, van, etc." ),
+                 `Share` = c(two$estimate,
+                             three_4$estimate,
+                             five_9$estimate,
+                             ten_19$estimate,
+                             twenty_49$estimate,
+                             fifty$estimate,
+                             one_detached$estimate,
+                             one_attached$estimate,
+                             mobile$estimate,
+                             boat_rv$estimate),
+                 Low = c(two$conf.int[1],
+                             three_4$conf.int[1],
+                             five_9$conf.int[1],
+                             ten_19$conf.int[1],
+                             twenty_49$conf.int[1],
+                             fifty$conf.int[1],
+                             one_detached$conf.int[1],
+                             one_attached$conf.int[1],
+                             mobile$conf.int[1],
+                             boat_rv$conf.int[1]),
+                  High = c(two$conf.int[2],
+                             three_4$conf.int[2],
+                             five_9$conf.int[2],
+                             ten_19$conf.int[2],
+                             twenty_49$conf.int[2],
+                             fifty$conf.int[2],
+                             one_detached$conf.int[2],
+                             one_attached$conf.int[2],
+                             mobile$conf.int[2],
+                             boat_rv$conf.int[2]),)
+knitr::kable(shares,caption = "Proportions and 95-Percent Confidence Intervals")
+```
+
+```{r bar chart units}
+ggplot(shares, aes(x = units, y = Share, ymin = Low, ymax = High)) +
+  geom_bar(stat = "identity", color ="white", size = 1, fill = "tomato3") +
+  geom_errorbar(width = 0.5) +
+  theme_gray() +
+  scale_x_discrete(name = "Number of Units in Building", labels = c("10-19\n Apts",
+                                   "2\n Apts",
+                                   "20-49\n Apts",
+                                   "3-4\n Apts",
+                                   "5-9\n Apts",
+                                   "50 or more\n Apts",
+                                   "Boat, RV,\n van, etc.",
+                                   "Mobile\n or trailer",
+                                   "One-fam\n attached",
+                                   "One-fam\n detached")) +
+  scale_y_continuous(name = "Share of population (error bars represent\n 95-percent confidence interval)",
+                     breaks = c(0, 0.1, 0.2, 0.3, 0.4, 0.5),
+                     labels = c("0", "10%", "20%", "30%", "40%", "50%"))
+```
