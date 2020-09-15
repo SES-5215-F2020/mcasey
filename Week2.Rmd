@@ -144,7 +144,7 @@ theme_dark()
 
 ```
 
-
+The average age of household buildings in Massachusetts is 63 years. The mean is higher than this because of the high quantity of homes that are 100 years or older. Half of the houses are 33 to 100 years old. This variable was a categorical variable that I transformed to a continuous variable, which accounts for why there are segmented bins.
 
 #### Number of Bedrooms
 ```{r bedrooms histogram}
@@ -186,7 +186,7 @@ Sample Interquartile Range: 2 to 4 people."),
 theme_light()
 ```
 
-The distribution of the number of people in households has a right skew with a long tail. Half of households consist of 2 to 4 people. 
+The distribution of the number of people in households has a right skew with a long tail. Half of households consist of 2 to 4 people. This might be closer to a Poisson distribution?
 
 #### Years lived at Household
 ```{r move histogram}
@@ -207,6 +207,8 @@ Sample Interquartile Range: 2 to 7 years."),
 theme_tufte()
 ```
 
+The average length that a household has been occupied is 5.69 years, however the mean is much lower at 3 years, due to the amount of households that have been occupied for less than five years. Half of the population has lived in their household for 2 to 7 years. The amount of households at the lower end of occupancy time is likely related to high number of rental units throughout Massachusetts.
+
 #### Gross Rent
 ```{r rent histogram}
 ggplot(hh_data,
@@ -225,6 +227,8 @@ Sample Interquartile Range: $980 to $2,020 per month."),
 
 theme_hc()
 ```
+
+The average household pays 1,551 dollars per month, but the median is lower because of the high number of rent amounts around 1000 to 1300 dollars per month. Half of households pay 980 to 2,020 dollars per month. The distribution has a right skew, with a tail of rent prices much higher.
 
 ## Distribution of Categorical Variables
 #### Household Types
@@ -283,14 +287,17 @@ ggplot(shares, aes(x = household_types, y = Share, ymin = Low, ymax = High)) +
                                     "Married Couple",
                                     "Other Family\n Male",
                                     "Other Family\n Female")) +
-  scale_y_continuous(name = "Share of population (error bars represent\n 95-percent confidence interval)",
+  scale_y_continuous(name = "Share of population (error bars represent\n 
+                     95-percent confidence interval)",
                      breaks = c(0, 0.1, 0.2, 0.3, 0.4, 0.5),
                      labels = c("0", "10%", "20%", "30%", "40%", "50%")) +
   
   theme_pander()
 ```
 
-## Number of Units in Building
+I find this bar graph interesting as it shows that, aside from married couples, the female bin of each category is higher than the male counterpart. I'm now more curious about the gender ratios in populations throughout the state.
+
+#### Number of Units in Building
 ```{r all possible values units}
 units <- unique(BLD_label)
 units
@@ -368,9 +375,12 @@ ggplot(shares, aes(x = units, y = Share, ymin = Low, ymax = High)) +
                                    "Mobile\n or trailer",
                                    "One-fam\n attached",
                                    "One-fam\n detached")) +
-  scale_y_continuous(name = "Share of population (error bars represent\n 95-percent confidence interval)",
+  scale_y_continuous(name = "Share of population (error bars represent\n 
+                     95-percent confidence interval)",
                      breaks = c(0, 0.1, 0.2, 0.3, 0.4, 0.5),
                      labels = c("0", "10%", "20%", "30%", "40%", "50%")) +
   
 theme_gray()
 ```
+
+I'm surprised by this bar graph given that my sample is the state of Massachusetts, so I thought one family (attached and detached) households would be more common than apartment buildings.
