@@ -5,6 +5,9 @@ date: September 17, 2020
 output: 
   html_document:
     theme: "cosmo" 
+    toc: true
+    toc_depth: 3
+    toc_float: true
     highlight: "tango"
 ---
 
@@ -29,6 +32,7 @@ Population: Renters in Massachusetts
 ```{r Load Libraries, message = FALSE}
 library(tidyverse)
 library(ggplot2)
+library(ggthemes)
 ```
 
 ### Load Data
@@ -128,16 +132,19 @@ ggplot(hh_data,
   theme_gray() +
   scale_x_continuous(name = "Age of Building (years)") +
   scale_y_continuous(name = "Number of Houses in Sample") +
-  annotate("text", x = 0, y = 6500, size = 3,
+  annotate("text", color = "white", x = 0, y = 6500, size = 3,
            label = paste("Population Mean (95% confidence): 63 to 63.9 years.
 Sample Mean: 63.5 years.
 Sample Median: 63 years.
 Sample Standard Deviation: 32.3 years.
 Sample Interquartile Range: 33 to 100 years."),
-           hjust = 0, vjust = 1)
+           hjust = 0, vjust = 1) +
+  
+theme_dark()
 
 ```
 
+The average age of household buildings in Massachusetts is 63 years. The mean is higher than this because of the high quantity of homes that are 100 years or older. Half of the houses are 33 to 100 years old. This variable was a categorical variable that I transformed to a continuous variable, which accounts for why there are segmented bins.
 
 #### Number of Bedrooms
 ```{r bedrooms histogram}
@@ -153,7 +160,8 @@ Sample Mean: 2.2 rooms.
 Sample Median: 2 rooms.
 Sample Standard Deviation: 1.05 rooms.
 Sample Interquartile Range: 2 to 3 rooms."),
-           hjust = 0, vjust = 1)
+           hjust = 0, vjust = 1) +
+theme_few()
 
 ```
 
@@ -163,7 +171,7 @@ The distribution of number of bedrooms is relatively normal, with a slight right
 ```{r people histogram}
 ggplot(hh_data,
                    aes(x = num_persons)) +
-  geom_histogram(color= "white", size = 1, fill = "azure3", binwidth = 1) +
+  geom_histogram(fill = "azure3", binwidth = 1) +
   theme_gray() +
   scale_x_continuous(name = "Number of People in Household") +
   scale_y_continuous(name = "Number of Houses in Sample") +
@@ -173,10 +181,12 @@ Sample Mean: 2.85 people.
 Sample Median: 3 people.
 Sample Standard Deviation: 1.56 people.
 Sample Interquartile Range: 2 to 4 people."),
-           hjust = 0, vjust = 1)
+           hjust = 0, vjust = 1) +
+  
+theme_light()
 ```
 
-The distribution of the number of people in households has a right skew with a long tail. Half of households consist of 2 to 4 people. 
+The distribution of the number of people in households has a right skew with a long tail. Half of households consist of 2 to 4 people. This might be closer to a Poisson distribution?
 
 #### Years lived at Household
 ```{r move histogram}
@@ -192,8 +202,12 @@ Sample Mean: 5.69 years.
 Sample Median: 3 years.
 Sample Standard Deviation: 6.54 years.
 Sample Interquartile Range: 2 to 7 years."),
-           hjust = 0, vjust = 1)
+           hjust = 0, vjust = 1) +
+
+theme_tufte()
 ```
+
+The average length that a household has been occupied is 5.69 years, however the mean is much lower at 3 years, due to the amount of households that have been occupied for less than five years. Half of the population has lived in their household for 2 to 7 years. The amount of households at the lower end of occupancy time is likely related to high number of rental units throughout Massachusetts.
 
 #### Gross Rent
 ```{r rent histogram}
@@ -209,8 +223,12 @@ Sample Mean: $1,551 per month.
 Sample Median: $1,440 per month.
 Sample Standard Deviation: $825 per month.
 Sample Interquartile Range: $980 to $2,020 per month."),
-           hjust = 0, vjust = 1)
+           hjust = 0, vjust = 1) +
+
+theme_hc()
 ```
+
+The average household pays 1,551 dollars per month, but the median is lower because of the high number of rent amounts around 1000 to 1300 dollars per month. Half of households pay 980 to 2,020 dollars per month. The distribution has a right skew, with a tail of rent prices much higher.
 
 ## Distribution of Categorical Variables
 #### Household Types
@@ -269,12 +287,17 @@ ggplot(shares, aes(x = household_types, y = Share, ymin = Low, ymax = High)) +
                                     "Married Couple",
                                     "Other Family\n Male",
                                     "Other Family\n Female")) +
-  scale_y_continuous(name = "Share of population (error bars represent\n 95-percent confidence interval)",
+  scale_y_continuous(name = "Share of population (error bars represent\n 
+                     95-percent confidence interval)",
                      breaks = c(0, 0.1, 0.2, 0.3, 0.4, 0.5),
-                     labels = c("0", "10%", "20%", "30%", "40%", "50%"))
+                     labels = c("0", "10%", "20%", "30%", "40%", "50%")) +
+  
+  theme_pander()
 ```
 
-## Number of Units in Building
+I find this bar graph interesting as it shows that, aside from married couples, the female bin of each category is higher than the male counterpart. I'm now more curious about the gender ratios in populations throughout the state.
+
+#### Number of Units in Building
 ```{r all possible values units}
 units <- unique(BLD_label)
 units
@@ -352,7 +375,12 @@ ggplot(shares, aes(x = units, y = Share, ymin = Low, ymax = High)) +
                                    "Mobile\n or trailer",
                                    "One-fam\n attached",
                                    "One-fam\n detached")) +
-  scale_y_continuous(name = "Share of population (error bars represent\n 95-percent confidence interval)",
+  scale_y_continuous(name = "Share of population (error bars represent\n 
+                     95-percent confidence interval)",
                      breaks = c(0, 0.1, 0.2, 0.3, 0.4, 0.5),
-                     labels = c("0", "10%", "20%", "30%", "40%", "50%"))
+                     labels = c("0", "10%", "20%", "30%", "40%", "50%")) +
+  
+theme_gray()
 ```
+
+I'm surprised by this bar graph given that my sample is the state of Massachusetts, so I thought one family (attached and detached) households would be more common than apartment buildings.
