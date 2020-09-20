@@ -1,0 +1,427 @@
+---
+title: "Assignment 3: Correlations, Differences, + Associations"
+author: "Meghan Casey"
+date: September 24, 2020
+output: 
+  html_document:
+    theme: "cosmo" 
+    toc: true
+    toc_depth: 4
+    toc_float: true
+    highlight: "tango"
+---
+### Variables of Interest
+Unit  of analysis: Household
+
+Population: Renters in Massachusetts
+
+1. Household Type (categorical): hh_type
+2. Number of Units within Building (categorical): num_units
+3. Age of Building (continuous): age_struct
+4. Number of Bedrooms (continuous): bedrooms
+5. Number of People (continuous): num_persons
+6. Time Lived There (continuous): move_in
+7. Gross Rent (continuous): gross_rent
+
+#### Load Libraries
+```{r message = FALSE}
+library(tidyverse)
+library(ggplot2)
+library(ggthemes)
+```
+
+#### Recode
+```{r message = FALSE}
+hh_data <- read_csv("households_MA.csv") %>%
+   mutate(num_units = case_when(
+    BLD_label=="2 Apartments"~"Building with fewer\nthan 10 apartments",
+    BLD_label=="10-19 Apartments"~"Building with 10\nto 49 apartments",
+    BLD_label=="One-family house detached" ~ "Single-family home",
+    BLD_label=="3-4 Apartments" ~ "Building with fewer\nthan 10 apartments",
+    BLD_label=="Mobile home or trailer" ~ "Mobile home or vehicle",
+    BLD_label=="50 or more apartments" ~ "Building with 50+\napartments",
+    BLD_label=="20-49 Apartments" ~ "Building with 10\nto 49 apartments",
+    BLD_label=="5-9 Apartments"~"Building with fewer\nthan 10 apartments",
+    BLD_label=="One-family house attached" ~ "Single-family home",
+    BLD_label=="Boat, RV, van, etc." ~ "Mobile home or vehicle"))
+```
+
+### Relationships between two Continuous Variables
+#### 1. Number of Bedrooms and Age of Structure
+```{r}
+correlation1 <- cor.test(hh_data$age_struct, hh_data$bedrooms)
+correlation1
+
+ggplot(hh_data, aes(x = bedrooms, y = age_struct)) +
+  geom_point(size = 1, alpha = 0.3, position = "jitter", color = "tomato3") +
+  theme_pander() +
+  scale_y_continuous(name = "Age of Structure (years)") +
+  scale_x_continuous(name = "Number of Bedrooms",
+                     breaks = seq(0, 6, by = 1),
+                     label = paste(prettyNum(seq(0, 6, by = 1)))) +
+  
+  annotate(geom = "text", x = 0, y = 90,
+           label = paste("Correlation (95-percent confidence):",
+                         prettyNum(correlation1$conf.int[1], digits = 2),
+                         "to",
+                         prettyNum(correlation1$conf.int[2], digits = 2)),
+           hjust = 0)
+```
+
+#### 2.Number of People and Age of Building
+```{r}
+correlation2 <- cor.test(hh_data$age_struct, hh_data$num_persons)
+correlation2
+
+ggplot(hh_data, aes(x = num_persons, y = age_struct)) +
+  geom_point(size = 1, alpha = 0.3, position = "jitter", color = "tomato3") +
+  theme_pander() +
+  scale_y_continuous(name = "Age of Structure (years)") +
+  scale_x_continuous(name = "Number of People",
+                     breaks = seq(0, 13, by = 1),
+                     label = paste(prettyNum(seq(0, 13, by = 1)))) +
+  
+  annotate(geom = "text", x = 0, y = 90,
+           label = paste("Correlation (95-percent confidence):",
+                         prettyNum(correlation2$conf.int[1], digits = 2),
+                         "to",
+                         prettyNum(correlation2$conf.int[2], digits = 2)),
+           hjust = 0)
+```
+
+#### 3. Time Lived There and Age of Building
+```{r}
+correlation3 <- cor.test(hh_data$age_struct, hh_data$move_in)
+correlation3
+
+ggplot(hh_data, aes(x = move_in, y = age_struct)) +
+  geom_point(size = 1, alpha = 0.3, position = "jitter", color = "tomato3") +
+  theme_pander() +
+  scale_y_continuous(name = "Age of Structure (years)") +
+  scale_x_continuous(name = "Time Lived There",
+                     breaks = seq(0, 30, by = 5),
+                     label = paste(prettyNum(seq(0, 30, by = 5)))) +
+  
+  annotate(geom = "text", x = 0, y = 90,
+           label = paste("Correlation (95-percent confidence):",
+                         prettyNum(correlation3$conf.int[1], digits = 2),
+                         "to",
+                         prettyNum(correlation3$conf.int[2], digits = 2)),
+           hjust = 0)
+```
+
+#### 4. Gross Rent and Age of Building
+```{r}
+correlation4 <- cor.test(hh_data$age_struct, hh_data$gross_rent)
+correlation4
+
+ggplot(hh_data, aes(x = gross_rent, y = age_struct)) +
+  geom_point(size = 1, alpha = 0.3, position = "jitter", color = "tomato3") +
+  geom_smooth(color = "dimgray") +
+  theme_pander() +
+  scale_y_continuous(name = "Age of Structure (years)") +
+  scale_x_continuous(name = "Gross Rent",
+                     breaks = seq(0, 4500, by = 500),
+                     label = paste("$", (prettyNum(seq(0, 4500, by = 500))))) +
+  
+  annotate(geom = "text", x = 0, y = 90,
+           label = paste("Correlation (95-percent confidence):",
+                         prettyNum(correlation4$conf.int[1], digits = 2),
+                         "to",
+                         prettyNum(correlation4$conf.int[2], digits = 2)),
+           hjust = 0)
+
+```
+
+#### 5. Number of Bedrooms and Number of People
+```{r}
+correlation5 <- cor.test(hh_data$bedrooms, hh_data$num_persons)
+correlation5
+
+ggplot(hh_data, aes(x = bedrooms, y = num_persons)) +
+  geom_point(size = 1, alpha = 0.3, position = "jitter", color = "tomato3") +
+  theme_pander() +
+  scale_y_continuous(name = "Number of People",
+                     breaks = seq(0, 13, by = 2)) +
+  scale_x_continuous(name = "Number of Bedrooms",
+                     breaks = seq(0, 6, by = 1),
+                     label = paste(prettyNum(seq(0, 6, by = 1)))) +
+  
+  annotate(geom = "text", x = -0.5, y = 13.5,
+           label = paste("Correlation (95-percent confidence):",
+                         prettyNum(correlation5$conf.int[1], digits = 2),
+                         "to",
+                         prettyNum(correlation5$conf.int[2], digits = 2)),
+           hjust = 0)
+
+```
+
+#### 6. Number of Bedrooms and Time Lived There
+```{r}
+correlation6 <- cor.test(hh_data$bedrooms, hh_data$move_in)
+correlation6
+
+ggplot(hh_data, aes(x = bedrooms, y = move_in)) +
+  geom_point(size = 1, alpha = 0.3, position = "jitter", color = "tomato3") +
+  theme_pander() +
+  scale_y_continuous(name = "Time Lived There",
+                     breaks = seq(0, 35, by = 5),
+                     label = paste(prettyNum(seq(0, 35, by = 5)))) +
+  scale_x_continuous(name = "Number of Bedrooms",
+                     breaks = seq(0, 6, by = 1),
+                     label = paste(prettyNum(seq(0, 6, by = 1)))) +
+  
+  annotate(geom = "text", x = -0.5, y = 32,
+           label = paste("Correlation (95-percent confidence):",
+                         prettyNum(correlation6$conf.int[1], digits = 2),
+                         "to",
+                         prettyNum(correlation6$conf.int[2], digits = 2)),
+           hjust = 0)
+```
+
+#### 7. Number of Bedrooms and Gross Rent
+```{r}
+correlation7 <- cor.test(hh_data$bedrooms, hh_data$gross_rent)
+correlation7
+
+ggplot(hh_data, aes(x = bedrooms, y = gross_rent)) +
+  geom_point(size = 1, alpha = 0.3, position = "jitter", color = "tomato3") +
+  theme_pander() +
+  scale_y_continuous(name = "Gross Rent",
+                     breaks = seq(0, 4500, by = 500),
+                     label = paste("$", (prettyNum(seq(0, 4500, by = 500))))) +
+  scale_x_continuous(name = "Number of Bedrooms",
+                     breaks = seq(0, 6, by = 1),
+                     label = paste(prettyNum(seq(0, 6, by = 1)))) +
+  
+  annotate(geom = "text", x = -0.5, y = 4600,
+           label = paste("Correlation (95-percent confidence):",
+                         prettyNum(correlation7$conf.int[1], digits = 2),
+                         "to",
+                         prettyNum(correlation7$conf.int[2], digits = 2)),
+           hjust = 0)
+```
+
+#### 8. Number of People and Time Lived There
+```{r}
+correlation8 <- cor.test(hh_data$num_persons, hh_data$move_in)
+correlation8
+
+ggplot(hh_data, aes(x = move_in, y = num_persons)) +
+  geom_point(size = 1, alpha = 0.3, position = "jitter", color = "tomato3") +
+  theme_pander() +
+  scale_y_continuous(name = "Number of People",
+                     breaks = seq(1, 13, by = 2)) +
+  scale_x_continuous(name = "Time Lived There",
+                     breaks = seq(0, 35, by = 5),
+                     label = paste(prettyNum(seq(0, 35, by = 5)))) +
+  
+  annotate(geom = "text", x = 13, y = 13.5,
+           label = paste("Correlation (95-percent confidence):",
+                         prettyNum(correlation8$conf.int[1], digits = 2),
+                         "to",
+                         prettyNum(correlation8$conf.int[2], digits = 2)),
+           hjust = 0)
+```
+
+#### 9. Number of People and Gross Rent
+```{r}
+correlation9 <- cor.test(hh_data$num_persons, hh_data$gross_rent)
+correlation9
+
+ggplot(hh_data, aes(x = gross_rent, y = num_persons)) +
+  geom_point(size = 1, alpha = 0.3, position = "jitter", color = "tomato3") +
+  geom_smooth(color = "dimgray") +
+  theme_pander() +
+  scale_y_continuous(name = "Number of People",
+                     breaks = seq(1, 13, by = 2)) +
+  scale_x_continuous(name = "Gross Rent",
+                     breaks = seq(0, 4500, by = 500),
+                     label = paste("$", (prettyNum(seq(0, 4500, by = 500))))) +
+  
+  annotate(geom = "text", x = 2000, y = 13.5,
+           label = paste("Correlation (95-percent confidence):",
+                         prettyNum(correlation9$conf.int[1], digits = 2),
+                         "to",
+                         prettyNum(correlation9$conf.int[2], digits = 2)),
+           hjust = 0)
+```
+
+#### 10. Time Lived There and Gross Rent
+```{r}
+correlation10 <- cor.test(hh_data$move_in, hh_data$gross_rent)
+correlation10
+
+ggplot(hh_data, aes(x = gross_rent, y = move_in)) +
+  geom_point(size = 1, alpha = 0.3, position = "jitter", color = "tomato3") +
+  geom_smooth(color = "dimgray") +
+  theme_pander() +
+  scale_y_continuous(name = "Time Lived There",
+                     breaks = seq(0, 35, by = 5),
+                     label = paste(prettyNum(seq(0, 35, by = 5)))) +
+  scale_x_continuous(name = "Gross Rent",
+                     breaks = seq(0, 4500, by = 500),
+                     label = paste("$", (prettyNum(seq(0, 4500, by = 500))))) +
+  
+  annotate(geom = "text", x = 2000, y = 20,
+           label = paste("Correlation (95-percent confidence):",
+                         prettyNum(correlation10$conf.int[1], digits = 2),
+                         "to",
+                         prettyNum(correlation10$conf.int[2], digits = 2)),
+           hjust = 0)
+```
+
+### Relationship between two Categorical Variables
+#### Household Type and Number of Units
+```{r}
+chi_sq <- chisq.test(hh_data$HHT_label == "Married couple household", hh_data$num_units)
+chi_sq
+
+chi_sq$observed
+chi_sq$expected
+```
+
+### Relationship between a continuous variable and a categorical variable (three or more levels)
+#### 1. Age of Building and Household Type
+```{r}
+anova1 <- aov(age_struct ~ HHT_label, data = hh_data)
+summary(anova1)
+
+differences1 <- TukeyHSD(anova1)
+
+as_tibble(cbind(pair = row.names(differences1$age_struct),
+                differences1$HHT_label))
+
+ggplot(hh_data, aes(x=HHT_label , y = age_struct)) +
+  geom_boxplot() +
+  theme_pander() +
+  theme(axis.text.x = element_text(size = 10, angle = 45)) +
+  scale_x_discrete(name = "Type of Household") +
+  scale_y_continuous(name = "Age of Building (years)")
+```
+
+#### 2. Age of Building and Number of Units
+```{r}
+anova2 <- aov(age_struct ~ num_units, data = hh_data)
+summary(anova2)
+
+differences2 <- TukeyHSD(anova2)
+
+as_tibble(cbind(pair = row.names(differences2$age_struct),
+                differences2$num_units))
+
+ggplot(hh_data, aes(y=num_units , x = age_struct)) +
+  geom_boxplot() +
+  theme_pander() +
+  theme(axis.text.x = element_text(size = 10, angle = 45)) +
+  scale_y_discrete(name = "Number of Units") +
+  scale_x_continuous(name = "Age of Building (years)")
+```
+
+#### 3. Number of Bedrooms and Household Type
+```{r}
+anova3 <- aov(bedrooms ~ HHT_label, data = hh_data)
+summary(anova3)
+
+differences3 <- TukeyHSD(anova3)
+
+as_tibble(cbind(pair = row.names(differences3$bedrooms),
+                differences3$HHT_label))
+
+ggplot(hh_data, aes(x=bedrooms , y = HHT_label)) +
+  geom_boxplot() +
+  theme_pander() +
+  theme(axis.text.x = element_text(size = 12)) +
+  scale_x_continuous(name = "Number of Bedrooms") +
+  scale_y_discrete(name = "Household Type")
+```
+
+#### 4. Number of Bedrooms and Number of Units
+```{r}
+anova4 <- aov(bedrooms ~ num_units, data = hh_data)
+summary(anova4)
+
+differences4 <- TukeyHSD(anova4)
+
+as_tibble(cbind(pair = row.names(differences4$bedrooms),
+                differences4$num_units))
+
+ggplot(hh_data, aes(x=bedrooms , y = num_units)) +
+  geom_boxplot() +
+  theme_pander() +
+  theme(axis.text.x = element_text(size = 12)) +
+  scale_x_continuous(name = "Number of Bedrooms") +
+  scale_y_discrete(name = "Number of Units")
+```
+
+#### 5. Number of People and Household Type
+```{r}
+anova5 <- aov(num_persons ~ HHT_label, data = hh_data)
+summary(anova5)
+
+differences5 <- TukeyHSD(anova5)
+
+as_tibble(cbind(pair = row.names(differences5$num_persons),
+                differences5$HHT_label))
+
+ggplot(hh_data, aes(x=num_persons , y = HHT_label)) +
+  geom_boxplot() +
+  theme_pander() +
+  theme(axis.text.x = element_text(size = 12)) +
+  scale_x_continuous(name = "Number of People") +
+  scale_y_discrete(name = "Household Type")
+```
+
+#### 6. Number of People and Number of Units
+```{r}
+anova6 <- aov(num_persons ~ num_units, data = hh_data)
+summary(anova6)
+
+differences6 <- TukeyHSD(anova6)
+
+as_tibble(cbind(pair = row.names(differences6$num_persons),
+                differences6$num_units))
+
+ggplot(hh_data, aes(x=num_persons , y = num_units)) +
+  geom_boxplot() +
+  theme_pander() +
+  theme(axis.text.x = element_text(size = 12)) +
+  scale_x_continuous(name = "Number of People") +
+  scale_y_discrete(name = "Number of Units")
+```
+
+#### 7. Time Lived There and Household Type
+```{r}
+anova7 <- aov(move_in ~ HHT_label, data = hh_data)
+summary(anova7)
+
+differences7 <- TukeyHSD(anova7)
+
+as_tibble(cbind(pair = row.names(differences5$move_in),
+                differences5$HHT_label))
+
+ggplot(hh_data, aes(x=move_in , y = HHT_label)) +
+  geom_boxplot() +
+  theme_pander() +
+  theme(axis.text.x = element_text(size = 12)) +
+  scale_x_continuous(name = "Time Lived There") +
+  scale_y_discrete(name = "Household Type")
+```
+
+#### 8. Time Lived There and Number of Units
+```{r}
+anova8 <- aov(move_in ~ num_units, data = hh_data)
+summary(anova8)
+
+differences8 <- TukeyHSD(anova8)
+
+as_tibble(cbind(pair = row.names(differences8$move_in),
+                differences8$num_units))
+
+ggplot(hh_data, aes(x=move_in , y = num_units)) +
+  geom_boxplot() +
+  theme_pander() +
+  theme(axis.text.x = element_text(size = 12)) +
+  scale_x_continuous(name = "Time Lived There") +
+  scale_y_discrete(name = "Number of Units")
+```
