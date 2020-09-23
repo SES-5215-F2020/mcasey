@@ -84,12 +84,7 @@ ggplot(hh_data1, aes(x = age_struct, y = bedrooms)) +
            hjust = 0)
 ```
 
-<<<<<<< HEAD
 ##### Age of Building and Number of Bedrooms: weak (0.11 correlation), but statistically significant (p-value < 2.2e-16), positive correlation at a 95% confidence level.
-=======
-
-Age of Building and Number of Bedrooms: weak (0.11 correlation), but statistically significant (p-value < 2.2e-16), positive correlation at a 95% confidence level.
->>>>>>> 5ceae9f678f39827320cb08e322d097deea32834
 
 #### 2. Age of Building and Number of People
 ```{r}
