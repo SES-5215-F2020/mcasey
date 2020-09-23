@@ -33,7 +33,7 @@ library(dplyr)
 ```
 
 #### Recode
-Changed my household type thanks to Ryan's code, didn't think to make those more simple before! I decided to do this later in time frame, and for some reason I couldn't get both mutates to work for the data, so I kept them separate (to be fixed at a later date!).
+##### Changed my household type thanks to Ryan's code, didn't think to make those more simple before! I decided to do this later in time frame, and for some reason I couldn't get both mutates to work for the data, so I kept them separate (to be fixed at a later date!).
 ```{r message = FALSE}
 hh_data1 <- read_csv("households_ma.csv") %>%
    mutate(num_units = case_when(
@@ -60,7 +60,7 @@ hh_data2 <- read_csv("households_ma.csv") %>%
 ```
 
 ### Relationships between two Continuous Variables
-To Note: I had already created most of the plots before realizing I didn't need to, so I left them in, but they aren't all very interesting!
+##### To Note: I had already created most of the plots before realizing I didn't need to, so I left them in, but they aren't all very interesting!
 
 #### 1. Age of Building and Number of Bedrooms
 ```{r}
@@ -84,7 +84,7 @@ ggplot(hh_data1, aes(x = age_struct, y = bedrooms)) +
            hjust = 0)
 ```
 
-Age of Building and Number of Bedrooms: weak (0.11 correlation), but statistically significant (p-value < 2.2e-16), positive correlation at a 95% confidence level.
+##### Age of Building and Number of Bedrooms: weak (0.11 correlation), but statistically significant (p-value < 2.2e-16), positive correlation at a 95% confidence level.
 
 #### 2. Age of Building and Number of People
 ```{r}
@@ -108,7 +108,7 @@ ggplot(hh_data1, aes(x = age_struct, y = num_persons)) +
            hjust = 0)
 ```
 
-Age of Building and Number of People: weak (0.05 correlation), but statistically significant (p-value < 1.237e-09), positive correlation at a 95% confidence level.
+##### Age of Building and Number of People: weak (0.05 correlation), but statistically significant (p-value < 1.237e-09), positive correlation at a 95% confidence level.
 
 #### 3. Age of Building and Time Lived There
 ```{r}
@@ -132,7 +132,7 @@ ggplot(hh_data1, aes(x = age_struct, y = move_in)) +
            hjust = 0)
 ```
 
-Age of Building and Time Lived There: weak (0.11 correlation), but statistically significant (p-value < 2.2e-16), positive correlation at a 95% confidence level.
+##### Age of Building and Time Lived There: weak (0.11 correlation), but statistically significant (p-value < 2.2e-16), positive correlation at a 95% confidence level.
 
 #### 4. Gross Rent and Age of Building
 ```{r}
@@ -157,7 +157,7 @@ ggplot(hh_data1, aes(x = gross_rent, y = age_struct)) +
 
 ```
 
-Gross Rent and Age of Building: weak (-0.10 correlation), but statistically significant (p-value < 2.2e-16), positive correlation at a 95% confidence level.
+##### Gross Rent and Age of Building: weak (-0.10 correlation), but statistically significant (p-value < 2.2e-16), positive correlation at a 95% confidence level.
 
 #### 5. Number of Bedrooms and Number of People
 ```{r}
@@ -183,7 +183,7 @@ ggplot(hh_data1, aes(x = num_persons, y = bedrooms)) +
 
 ```
 
-Number of Bedrooms and Number of People: moderate (0.57 correlation), statistically significant (p-value < 2.2e-16), positive correlation at a 95% confidence level.
+##### Number of Bedrooms and Number of People: moderate (0.57 correlation), statistically significant (p-value < 2.2e-16), positive correlation at a 95% confidence level.
 
 #### 6. Time Lived There and Number of Bedrooms 
 ```{r}
@@ -208,7 +208,7 @@ ggplot(hh_data1, aes(x = move_in, y = bedrooms)) +
            hjust = 0)
 ```
 
-Time Lived There and Number of Bedrooms: weak (0.05 correlation), but statistically significant (p-value < 1.488e-10), positive correlation at a 95% confidence level.
+##### Time Lived There and Number of Bedrooms: weak (0.05 correlation), but statistically significant (p-value < 1.488e-10), positive correlation at a 95% confidence level.
 
 #### 7. Gross Rent and Number of Bedrooms
 ```{r}
@@ -234,7 +234,7 @@ ggplot(hh_data1, aes(x = gross_rent, y = bedrooms)) +
            hjust = 0)
 ```
 
-Gross Rent and Number of Bedrooms: weak (0.20 correlation), but statistically significant (p-value < 2.2e-16), positive correlation at a 95% confidence level.
+##### Gross Rent and Number of Bedrooms: weak (0.20 correlation), but statistically significant (p-value < 2.2e-16), positive correlation at a 95% confidence level.
 
 #### 8. Time Lived There and Number of People 
 ```{r}
@@ -259,7 +259,7 @@ ggplot(hh_data1, aes(x = num_persons, y = move_in)) +
            hjust = 0)
 ```
 
-Time Lived There and Number of People: weak (-0.03 correlation), but statistically significant (p-value < 8.226e-05), negative correlation at a 95% confidence level.
+##### Time Lived There and Number of People: weak (-0.03 correlation), but statistically significant (p-value < 8.226e-05), negative correlation at a 95% confidence level.
 
 #### 9. Number of People and Gross Rent
 ```{r}
@@ -284,7 +284,7 @@ ggplot(hh_data1, aes(x = gross_rent, y = num_persons)) +
            hjust = 0)
 ```
 
-Number of People and Gross Rent: weak (0.16 correlation), but statistically significant (p-value < 2.2e-16), positive correlation at a 95% confidence level.
+##### Number of People and Gross Rent: weak (0.16 correlation), but statistically significant (p-value < 2.2e-16), positive correlation at a 95% confidence level.
 
 #### 10. Time Lived There and Gross Rent
 ```{r}
@@ -310,10 +310,10 @@ ggplot(hh_data1, aes(x = gross_rent, y = move_in)) +
            hjust = 0)
 ```
 
-Time Lived There and Gross Rent: weak (-0.26 correlation), but statistically significant (p-value < 2.2e-16), negative correlation at a 95% confidence level.
+##### Time Lived There and Gross Rent: weak (-0.26 correlation), but statistically significant (p-value < 2.2e-16), negative correlation at a 95% confidence level.
 
 ### Relationship between two Categorical Variables
-Thank you to Ryan again for his wise words on this heat map!
+##### Thank you to Ryan again for his wise words on this heat map!
 #### Household Type and Number of Units
 ```{r}
 chi_sq <- chisq.test(hh_data2$hh_type, hh_data1$num_units)
@@ -369,7 +369,7 @@ ggplot(hh_data2, aes(x=hh_type , y = age_struct)) +
   scale_y_continuous(name = "Age of Building (years)")
 ```
 
-There is a statistically significant relationship between Household Type and Age of Building (2.02e-09). All but Single Parent households occupy the same range of ages of buildings.
+##### There is a statistically significant relationship between Household Type and Age of Building (2.02e-09). All but Single Parent households occupy the same range of ages of buildings.
 
 #### 2. Age of Building and Number of Units
 ```{r}
@@ -389,7 +389,7 @@ ggplot(hh_data1, aes(y=num_units , x = age_struct)) +
   scale_x_continuous(name = "\nAge of Building (years)")
 ```
 
-There is a statistically significant relationship between Number of Units and Age of Building (<2e-16). This box plot shows a few things: 1. Mobile home or vehicles have a small interquartile range and lower median than some of the unit categories, likely because the lifecycle of vehicles is less than buildings. 2. The lower median of 50+ apartments might relate to that style of housing becoming more popular recently, while other types have been common for much longer.
+##### There is a statistically significant relationship between Number of Units and Age of Building (<2e-16). This box plot shows a few things: 1. Mobile home or vehicles have a small interquartile range and lower median than some of the unit categories, likely because the lifecycle of vehicles is less than buildings. 2. The lower median of 50+ apartments might relate to that style of housing becoming more popular recently, while other types have been common for much longer.
 
 #### 3. Number of Bedrooms and Household Type
 ```{r}
@@ -410,7 +410,7 @@ ggplot(hh_data2, aes(x=bedrooms , y = hh_type)) +
   scale_y_discrete(name = "Household Type\n")
 ```
 
-There is a statistically significant relationship between Household Type and Number of Bedrooms (<2e-16). This relationship is shown in the box plot, with all but living along having the same interquartile range, but it would make sense for a lone person to require fewer bedrooms. There are also several outliers in each category, something that could be interesting to look into.
+##### There is a statistically significant relationship between Household Type and Number of Bedrooms (<2e-16). This relationship is shown in the box plot, with all but living along having the same interquartile range, but it would make sense for a lone person to require fewer bedrooms. There are also several outliers in each category, something that could be interesting to look into.
 
 #### 4. Number of Bedrooms and Number of Units
 ```{r}
@@ -431,7 +431,7 @@ ggplot(hh_data1, aes(x=bedrooms , y = num_units)) +
   scale_y_discrete(name = "Number of Units\n")
 ```
 
-There is a statistically significant relationship between Number of Units and Number of Bedrooms (<2e-16). Aside from mobile home or vehicle, lower density has more bedrooms, while higher density buildings have less bedrooms.
+##### There is a statistically significant relationship between Number of Units and Number of Bedrooms (<2e-16). Aside from mobile home or vehicle, lower density has more bedrooms, while higher density buildings have less bedrooms.
 
 #### 5. Number of People and Household Type
 ```{r}
@@ -452,7 +452,7 @@ ggplot(hh_data2, aes(x=num_persons , y = hh_type)) +
   scale_y_discrete(name = "Household Type\n")
 ```
 
-There is a statistically significant relationship between Household Type and Number of People (<2e-16). Living alone already indicates the number of people in the home, but it is interesting to see that married couples and single parents have almost the same ranges, even in the outliers.
+##### There is a statistically significant relationship between Household Type and Number of People (<2e-16). Living alone already indicates the number of people in the home, but it is interesting to see that married couples and single parents have almost the same ranges, even in the outliers.
 
 #### 6. Number of People and Number of Units
 ```{r}
@@ -473,7 +473,7 @@ ggplot(hh_data1, aes(y=num_persons , x = num_units)) +
                      breaks = seq(0, 14, by = 1))
 ```
 
-There is a statistically significant relationship between Number of Units and Number of People (<2e-16). Similar to number of bedrooms above, lower density buildings have more people.
+##### There is a statistically significant relationship between Number of Units and Number of People (<2e-16). Similar to number of bedrooms above, lower density buildings have more people.
 
 #### 7. Time Lived There and Household Type
 ```{r}
@@ -494,7 +494,7 @@ ggplot(hh_data2, aes(x=move_in , y = hh_type)) +
   scale_y_discrete(name = "Household Type\n")
 ```
 
-There is a statistically significant relationship between Household Type and Time Lived There (<2e-16). All but roommates share the same range, median, and outliers.
+##### There is a statistically significant relationship between Household Type and Time Lived There (<2e-16). All but roommates share the same range, median, and outliers.
 
 #### 8. Time Lived There and Number of Units
 ```{r}
@@ -514,7 +514,7 @@ ggplot(hh_data1, aes(x=move_in , y = num_units)) +
   scale_y_discrete(name = "Number of Units")
 ```
 
-There is a statistically significant relationship between Number of Units and Time Lived There (<2e-16). All have the same upper quartile and median!
+##### There is a statistically significant relationship between Number of Units and Time Lived There (<2e-16). All have the same upper quartile and median!
 
 #### 9. Gross Rent and Household Type
 ```{r}
@@ -536,7 +536,7 @@ ggplot(hh_data2, aes(x=gross_rent , y = hh_type)) +
   scale_y_discrete(name = "Household Type\n")
 ```
 
-There is a statistically significant relationship between Household Type and Gross Rent (<2e-16). This would be interesting to compare to the number of bedrooms, as that usually has a factor on gross rent. There are also a lot of outliers.
+##### There is a statistically significant relationship between Household Type and Gross Rent (<2e-16). This would be interesting to compare to the number of bedrooms, as that usually has a factor on gross rent. There are also a lot of outliers.
 
 #### 8. Gross Rent and Number of Units
 ```{r}
@@ -558,4 +558,4 @@ ggplot(hh_data1, aes(x=gross_rent , y = num_units)) +
   scale_y_discrete(name = "Number of Units\n")
 ```
 
-There is a statistically significant relationship between Number of Units and Gross Rent (<2e-16). What is the rent for Mobile home or vehicle? Expenses/insurance? Also interesting to see that 50+ apartments has a very wide interquartile range.
+##### There is a statistically significant relationship between Number of Units and Gross Rent (<2e-16). What is the rent for Mobile home or vehicle? Expenses/insurance? Also interesting to see that 50+ apartments has a very wide interquartile range.
