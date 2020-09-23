@@ -538,7 +538,7 @@ ggplot(hh_data2, aes(x=gross_rent , y = hh_type)) +
 
 ##### There is a statistically significant relationship between Household Type and Gross Rent (<2e-16). This would be interesting to compare to the number of bedrooms, as that usually has a factor on gross rent. There are also a lot of outliers.
 
-#### 8. Gross Rent and Number of Units
+#### 10. Gross Rent and Number of Units
 ```{r}
 anova10 <- aov(gross_rent ~ num_units, data = hh_data1)
 summary(anova10)
