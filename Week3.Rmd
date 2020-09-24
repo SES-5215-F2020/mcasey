@@ -33,7 +33,7 @@ library(dplyr)
 ```
 
 #### Recode
-##### Changed my household type thanks to Ryan's code, didn't think to make those more simple before! I decided to do this later in time frame, and for some reason I couldn't get both mutates to work for the data, so I kept them separate (to be fixed at a later date!).
+##### Changed my household type thanks to Ryan's code, didn't think to make those more simple before!
 ```{r message = FALSE}
 hh_data1 <- read_csv("households_ma.csv") %>%
    mutate(num_units = case_when(
@@ -46,9 +46,7 @@ hh_data1 <- read_csv("households_ma.csv") %>%
     BLD_label=="20-49 Apartments" ~ "10 to 49\napartments",
     BLD_label=="5-9 Apartments"~"Fewer than\n10 apartments",
     BLD_label=="One-family house attached" ~ "Single-family",
-    BLD_label=="Boat, RV, van, etc." ~ "Mobile home\nor vehicle"))
-
-hh_data2 <- read_csv("households_ma.csv") %>%
+    BLD_label=="Boat, RV, van, etc." ~ "Mobile home\nor vehicle")) %>%
   mutate(hh_type = case_when(
     HHT_label =="Married couple household"~"Married\ncouple",
     HHT_label =="Other family household: Female householder, no spouse present"~"Single\nParent",
@@ -316,7 +314,7 @@ ggplot(hh_data1, aes(x = gross_rent, y = move_in)) +
 ##### Thank you to Ryan again for his wise words on this heat map!
 #### Household Type and Number of Units
 ```{r}
-chi_sq <- chisq.test(hh_data2$hh_type, hh_data1$num_units)
+chi_sq <- chisq.test(hh_data1$hh_type, hh_data1$num_units)
 chi_sq
 
 chi_sq$observed
@@ -331,7 +329,7 @@ chi_dif_data <- as.data.frame(difference_chi)
 ```{r}
 chi_heatmap <- ggplot(chi_dif_data, 
        aes(y = hh_data1.num_units,
-           x = hh_data2.hh_type,
+           x = hh_data1.hh_type,
            fill = Freq)) +
   geom_tile() +
   scale_x_discrete(name = "Household Type") +
@@ -353,7 +351,7 @@ chi_heatmap
 ### Relationship between a continuous variable and a categorical variable (three or more levels)
 #### 1. Age of Building and Household Type
 ```{r}
-anova1 <- aov(age_struct ~ hh_type, data = hh_data2)
+anova1 <- aov(age_struct ~ hh_type, data = hh_data1)
 summary(anova1)
 
 differences1 <- TukeyHSD(anova1)
@@ -361,7 +359,7 @@ differences1 <- TukeyHSD(anova1)
 as_tibble(cbind(pair = row.names(differences1$age_struct),
                 differences1$hh_type))
 
-ggplot(hh_data2, aes(x=hh_type , y = age_struct)) +
+ggplot(hh_data1, aes(x=hh_type , y = age_struct)) +
   geom_boxplot(fill = "tomato1", alpha = 0.5) +
   theme_pander() +
   theme(axis.text.x = element_text(size = 10)) +
@@ -393,7 +391,7 @@ ggplot(hh_data1, aes(y=num_units , x = age_struct)) +
 
 #### 3. Number of Bedrooms and Household Type
 ```{r}
-anova3 <- aov(bedrooms ~ hh_type, data = hh_data2)
+anova3 <- aov(bedrooms ~ hh_type, data = hh_data1)
 summary(anova3)
 
 differences3 <- TukeyHSD(anova3)
@@ -401,7 +399,7 @@ differences3 <- TukeyHSD(anova3)
 as_tibble(cbind(pair = row.names(differences3$bedrooms),
                 differences3$hh_type))
 
-ggplot(hh_data2, aes(x=bedrooms , y = hh_type)) +
+ggplot(hh_data1, aes(x=bedrooms , y = hh_type)) +
   geom_boxplot(color = "slateblue", fill = "dimgray", alpha = 0.25) +
   theme_pander() +
   theme(axis.text.x = element_text(size = 12)) +
@@ -435,7 +433,7 @@ ggplot(hh_data1, aes(x=bedrooms , y = num_units)) +
 
 #### 5. Number of People and Household Type
 ```{r}
-anova5 <- aov(num_persons ~ hh_type, data = hh_data2)
+anova5 <- aov(num_persons ~ hh_type, data = hh_data1)
 summary(anova5)
 
 differences5 <- TukeyHSD(anova5)
@@ -443,7 +441,7 @@ differences5 <- TukeyHSD(anova5)
 as_tibble(cbind(pair = row.names(differences5$num_persons),
                 differences5$hh_type))
 
-ggplot(hh_data2, aes(x=num_persons , y = hh_type)) +
+ggplot(hh_data1, aes(x=num_persons , y = hh_type)) +
   geom_boxplot(fill = "goldenrod2", alpha = 0.5) +
   theme_pander() +
   theme(axis.text.x = element_text(size = 12)) +
@@ -477,7 +475,7 @@ ggplot(hh_data1, aes(y=num_persons , x = num_units)) +
 
 #### 7. Time Lived There and Household Type
 ```{r}
-anova7 <- aov(move_in ~ hh_type, data = hh_data2)
+anova7 <- aov(move_in ~ hh_type, data = hh_data1)
 summary(anova7)
 
 differences7 <- TukeyHSD(anova7)
@@ -485,7 +483,7 @@ differences7 <- TukeyHSD(anova7)
 as_tibble(cbind(pair = row.names(differences7$move_in),
                 differences7$hh_type))
 
-ggplot(hh_data2, aes(x=move_in , y = hh_type)) +
+ggplot(hh_data1, aes(x=move_in , y = hh_type)) +
   geom_boxplot(color = "salmon4") +
   theme_pander() +
   theme(axis.text.x = element_text(size = 12)) +
@@ -518,7 +516,7 @@ ggplot(hh_data1, aes(x=move_in , y = num_units)) +
 
 #### 9. Gross Rent and Household Type
 ```{r}
-anova9 <- aov(gross_rent ~ hh_type, data = hh_data2)
+anova9 <- aov(gross_rent ~ hh_type, data = hh_data1)
 summary(anova7)
 
 differences9 <- TukeyHSD(anova9)
@@ -526,7 +524,7 @@ differences9 <- TukeyHSD(anova9)
 as_tibble(cbind(pair = row.names(differences9$gross_rent),
                 differences9$hh_type))
 
-ggplot(hh_data2, aes(x=gross_rent , y = hh_type)) +
+ggplot(hh_data1, aes(x=gross_rent , y = hh_type)) +
   geom_boxplot(color = "salmon2", fill = "salmon1", alpha = 0.25) +
   theme_pander() +
   theme(axis.text.x = element_text(size = 12)) +
