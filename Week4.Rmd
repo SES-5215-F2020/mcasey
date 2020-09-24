@@ -35,28 +35,28 @@ library(dplyr)
 ```{r message = FALSE}
 hh_data1 <- read_csv("households_ma.csv") %>%
    mutate(num_units = case_when(
-    BLD_label=="2 Apartments"~"Fewer than\n10 apartments",
-    BLD_label=="10-19 Apartments"~"10 to 49\napartments",
+    BLD_label=="2 Apartments"~"Fewer than 10 apartments",
+    BLD_label=="10-19 Apartments"~"10 to 49 apartments",
     BLD_label=="One-family house detached" ~ "Single-family",
-    BLD_label=="3-4 Apartments" ~ "Fewer than\n10 apartments",
-    BLD_label=="Mobile home or trailer" ~ "Mobile home\nor vehicle",
-    BLD_label=="50 or more apartments" ~ "50+\napartments",
-    BLD_label=="20-49 Apartments" ~ "10 to 49\napartments",
-    BLD_label=="5-9 Apartments"~"Fewer than\n10 apartments",
+    BLD_label=="3-4 Apartments" ~ "Fewer than 10 apartments",
+    BLD_label=="Mobile home or trailer" ~ "Mobile home or vehicle",
+    BLD_label=="50 or more apartments" ~ "50+ apartments",
+    BLD_label=="20-49 Apartments" ~ "10 to 49 apartments",
+    BLD_label=="5-9 Apartments"~"Fewer than 10 apartments",
     BLD_label=="One-family house attached" ~ "Single-family",
-    BLD_label=="Boat, RV, van, etc." ~ "Mobile home\nor vehicle")) %>%
+    BLD_label=="Boat, RV, van, etc." ~ "Mobile home or vehicle")) %>%
   mutate(hh_type = case_when(
-    HHT_label =="Married couple household"~"1Married\ncouple",
-    HHT_label =="Other family household: Female householder, no spouse present"~"Single\nParent",
-    HHT_label =="Other family household: Male householder, no spouse present"~"Single\nParent",
+    HHT_label =="Married couple household"~"1Married couple",
+    HHT_label =="Other family household: Female householder, no spouse present"~"Single Parent",
+    HHT_label =="Other family household: Male householder, no spouse present"~"Single Parent",
     HHT_label =="Nonfamily household: Male householder: Not living alone"~"Roommates",
     HHT_label =="Nonfamily household: Female householder: Not living alone"~"Roommates",
-    HHT_label =="Nonfamily household: Female householder: Living alone"~"Living\nAlone",
-    HHT_label =="Nonfamily household: Male householder: Living alone"~"Living\nAlone"))
+    HHT_label =="Nonfamily household: Female householder: Living alone"~"Living Alone",
+    HHT_label =="Nonfamily household: Male householder: Living alone"~"Living Alone"))
 ```
 
 ```{r}
-model <- lm(gross_rent ~ age_struct + bedrooms + hh_type + num_persons, 
+model <- lm(gross_rent ~ age_struct + bedrooms + hh_type + num_units, 
             data = hh_data1)
 
 summary(model)
