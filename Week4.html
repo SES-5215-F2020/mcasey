@@ -1630,54 +1630,88 @@ div.tocify {
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>hh_data1 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;households_ma.csv&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb2-2"><a href="#cb2-2"></a><span class="st">   </span><span class="kw">mutate</span>(<span class="dt">num_units =</span> <span class="kw">case_when</span>(</span>
 <span id="cb2-3"><a href="#cb2-3"></a>    BLD_label<span class="op">==</span><span class="st">&quot;2 Apartments&quot;</span><span class="op">~</span><span class="st">&quot;Fewer than 10 apartments&quot;</span>,</span>
-<span id="cb2-4"><a href="#cb2-4"></a>    BLD_label<span class="op">==</span><span class="st">&quot;10-19 Apartments&quot;</span><span class="op">~</span><span class="st">&quot;10 to 49 apartments&quot;</span>,</span>
-<span id="cb2-5"><a href="#cb2-5"></a>    BLD_label<span class="op">==</span><span class="st">&quot;One-family house detached&quot;</span> <span class="op">~</span><span class="st"> &quot;Single-family&quot;</span>,</span>
+<span id="cb2-4"><a href="#cb2-4"></a>    BLD_label<span class="op">==</span><span class="st">&quot;10-19 Apartments&quot;</span><span class="op">~</span><span class="st">&quot;Ten to 49 apartments&quot;</span>,</span>
+<span id="cb2-5"><a href="#cb2-5"></a>    BLD_label<span class="op">==</span><span class="st">&quot;One-family house detached&quot;</span> <span class="op">~</span><span class="st"> &quot;1Single-family&quot;</span>,</span>
 <span id="cb2-6"><a href="#cb2-6"></a>    BLD_label<span class="op">==</span><span class="st">&quot;3-4 Apartments&quot;</span> <span class="op">~</span><span class="st"> &quot;Fewer than 10 apartments&quot;</span>,</span>
 <span id="cb2-7"><a href="#cb2-7"></a>    BLD_label<span class="op">==</span><span class="st">&quot;Mobile home or trailer&quot;</span> <span class="op">~</span><span class="st"> &quot;Mobile home or vehicle&quot;</span>,</span>
 <span id="cb2-8"><a href="#cb2-8"></a>    BLD_label<span class="op">==</span><span class="st">&quot;50 or more apartments&quot;</span> <span class="op">~</span><span class="st"> &quot;50+ apartments&quot;</span>,</span>
-<span id="cb2-9"><a href="#cb2-9"></a>    BLD_label<span class="op">==</span><span class="st">&quot;20-49 Apartments&quot;</span> <span class="op">~</span><span class="st"> &quot;10 to 49 apartments&quot;</span>,</span>
+<span id="cb2-9"><a href="#cb2-9"></a>    BLD_label<span class="op">==</span><span class="st">&quot;20-49 Apartments&quot;</span> <span class="op">~</span><span class="st"> &quot;Ten to 49 apartments&quot;</span>,</span>
 <span id="cb2-10"><a href="#cb2-10"></a>    BLD_label<span class="op">==</span><span class="st">&quot;5-9 Apartments&quot;</span><span class="op">~</span><span class="st">&quot;Fewer than 10 apartments&quot;</span>,</span>
-<span id="cb2-11"><a href="#cb2-11"></a>    BLD_label<span class="op">==</span><span class="st">&quot;One-family house attached&quot;</span> <span class="op">~</span><span class="st"> &quot;Single-family&quot;</span>,</span>
+<span id="cb2-11"><a href="#cb2-11"></a>    BLD_label<span class="op">==</span><span class="st">&quot;One-family house attached&quot;</span> <span class="op">~</span><span class="st"> &quot;1Single-family&quot;</span>,</span>
 <span id="cb2-12"><a href="#cb2-12"></a>    BLD_label<span class="op">==</span><span class="st">&quot;Boat, RV, van, etc.&quot;</span> <span class="op">~</span><span class="st"> &quot;Mobile home or vehicle&quot;</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb2-13"><a href="#cb2-13"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">hh_type =</span> <span class="kw">case_when</span>(</span>
-<span id="cb2-14"><a href="#cb2-14"></a>    HHT_label <span class="op">==</span><span class="st">&quot;Married couple household&quot;</span><span class="op">~</span><span class="st">&quot;1Married couple&quot;</span>,</span>
+<span id="cb2-14"><a href="#cb2-14"></a>    HHT_label <span class="op">==</span><span class="st">&quot;Married couple household&quot;</span><span class="op">~</span><span class="st">&quot;Married couple&quot;</span>,</span>
 <span id="cb2-15"><a href="#cb2-15"></a>    HHT_label <span class="op">==</span><span class="st">&quot;Other family household: Female householder, no spouse present&quot;</span><span class="op">~</span><span class="st">&quot;Single Parent&quot;</span>,</span>
 <span id="cb2-16"><a href="#cb2-16"></a>    HHT_label <span class="op">==</span><span class="st">&quot;Other family household: Male householder, no spouse present&quot;</span><span class="op">~</span><span class="st">&quot;Single Parent&quot;</span>,</span>
 <span id="cb2-17"><a href="#cb2-17"></a>    HHT_label <span class="op">==</span><span class="st">&quot;Nonfamily household: Male householder: Not living alone&quot;</span><span class="op">~</span><span class="st">&quot;Roommates&quot;</span>,</span>
 <span id="cb2-18"><a href="#cb2-18"></a>    HHT_label <span class="op">==</span><span class="st">&quot;Nonfamily household: Female householder: Not living alone&quot;</span><span class="op">~</span><span class="st">&quot;Roommates&quot;</span>,</span>
-<span id="cb2-19"><a href="#cb2-19"></a>    HHT_label <span class="op">==</span><span class="st">&quot;Nonfamily household: Female householder: Living alone&quot;</span><span class="op">~</span><span class="st">&quot;Living Alone&quot;</span>,</span>
-<span id="cb2-20"><a href="#cb2-20"></a>    HHT_label <span class="op">==</span><span class="st">&quot;Nonfamily household: Male householder: Living alone&quot;</span><span class="op">~</span><span class="st">&quot;Living Alone&quot;</span>))</span></code></pre></div>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>model &lt;-<span class="st"> </span><span class="kw">lm</span>(gross_rent <span class="op">~</span><span class="st"> </span>age_struct <span class="op">+</span><span class="st"> </span>bedrooms <span class="op">+</span><span class="st"> </span>hh_type <span class="op">+</span><span class="st"> </span>num_units, </span>
+<span id="cb2-19"><a href="#cb2-19"></a>    HHT_label <span class="op">==</span><span class="st">&quot;Nonfamily household: Female householder: Living alone&quot;</span><span class="op">~</span><span class="st">&quot;1Living Alone&quot;</span>,</span>
+<span id="cb2-20"><a href="#cb2-20"></a>    HHT_label <span class="op">==</span><span class="st">&quot;Nonfamily household: Male householder: Living alone&quot;</span><span class="op">~</span><span class="st">&quot;1Living Alone&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>model &lt;-<span class="st"> </span><span class="kw">lm</span>(gross_rent <span class="op">~</span><span class="st"> </span>age_struct <span class="op">+</span><span class="st"> </span>bedrooms <span class="op">+</span><span class="st"> </span>hh_type <span class="op">+</span><span class="st"> </span>num_units <span class="op">+</span><span class="st"> </span>move_in <span class="op">+</span><span class="st"> </span>num_persons, </span>
 <span id="cb3-2"><a href="#cb3-2"></a>            <span class="dt">data =</span> hh_data1)</span>
 <span id="cb3-3"><a href="#cb3-3"></a></span>
 <span id="cb3-4"><a href="#cb3-4"></a><span class="kw">summary</span>(model)</span></code></pre></div>
 <pre><code>## 
 ## Call:
-## lm(formula = gross_rent ~ age_struct + bedrooms + hh_type + num_units, 
-##     data = hh_data1)
+## lm(formula = gross_rent ~ age_struct + bedrooms + hh_type + num_units + 
+##     move_in + num_persons, data = hh_data1)
 ## 
 ## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -2020.38  -524.45   -72.08   449.27  3060.50 
+##     Min      1Q  Median      3Q     Max 
+## -2109.1  -511.1   -65.1   438.0  3318.6 
 ## 
 ## Coefficients:
 ##                                    Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)                       1480.0320    22.3269  66.289  &lt; 2e-16 ***
-## age_struct                          -2.0776     0.1853 -11.211  &lt; 2e-16 ***
-## bedrooms                           144.9244     6.4685  22.405  &lt; 2e-16 ***
-## hh_typeLiving Alone               -422.6214    17.0823 -24.740  &lt; 2e-16 ***
-## hh_typeRoommates                   366.2308    16.1125  22.730  &lt; 2e-16 ***
-## hh_typeSingle Parent              -300.4077    14.5405 -20.660  &lt; 2e-16 ***
-## num_units50+ apartments            230.9047    21.1768  10.904  &lt; 2e-16 ***
-## num_unitsFewer than 10 apartments  -94.5620    16.9500  -5.579 2.46e-08 ***
-## num_unitsMobile home or vehicle   -286.0537   111.5195  -2.565   0.0103 *  
-## num_unitsSingle-family              12.3279    20.9701   0.588   0.5566    
+## (Intercept)                       1222.0526    25.6176  47.704  &lt; 2e-16 ***
+## age_struct                          -1.5212     0.1817  -8.372  &lt; 2e-16 ***
+## bedrooms                           158.8921     6.9488  22.866  &lt; 2e-16 ***
+## hh_typeMarried couple              377.5075    19.4869  19.372  &lt; 2e-16 ***
+## hh_typeRoommates                   669.4940    19.6520  34.067  &lt; 2e-16 ***
+## hh_typeSingle Parent                80.4561    19.8550   4.052 5.10e-05 ***
+## num_units50+ apartments            199.7573    22.2634   8.972  &lt; 2e-16 ***
+## num_unitsFewer than 10 apartments -120.0424    15.6955  -7.648 2.14e-14 ***
+## num_unitsMobile home or vehicle   -307.6658   108.7746  -2.828  0.00468 ** 
+## num_unitsTen to 49 apartments      -32.3534    20.4657  -1.581  0.11393    
+## move_in                            -26.1419     0.8638 -30.264  &lt; 2e-16 ***
+## num_persons                         -2.6143     5.0173  -0.521  0.60233    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 749.7 on 17912 degrees of freedom
-## Multiple R-squared:  0.1749, Adjusted R-squared:  0.1744 
-## F-statistic: 421.8 on 9 and 17912 DF,  p-value: &lt; 2.2e-16</code></pre>
+## Residual standard error: 731.2 on 17910 degrees of freedom
+## Multiple R-squared:  0.215,  Adjusted R-squared:  0.2146 
+## F-statistic:   446 on 11 and 17910 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div id="linear-regression-interpretation" class="section level3">
+<h3>Linear Regression Interpretation</h3>
+<p>With an adjusted R Square value of .215, these independent variables explain 22% of the variation in gross rent. The gross rent is per month. Most of the relationships are statistically significant, but apartments in buildings with 10-49 units and the number of people do not have a statistically significant relationship in predicting gross rent. But age of building, number of bedrooms, all types of households, years lived there, and all other building types have a statistically significant relationship in predicting gross rent.</p>
+<div id="age-of-building" class="section level4">
+<h4>Age of Building</h4>
+<p>The age_struct independent variable is the age of the building. The model suggests that as the age increases by one year, the gross rent decreases by 1.5 dollars. This is a very small change given the intercept gross rent is 1200 dollars, but generally, the older the house, the lower the rent. This is a statistically significant relationship.</p>
+</div>
+<div id="number-of-bedrooms" class="section level4">
+<h4>Number of Bedrooms</h4>
+<p>The bedrooms independent variable is the number of bedrooms in each household. The model suggests that as the number of bedrooms increases by one, the gross rent increases by about 158 dollars. So, the more bedrooms, the higher the rent. This is a statistically significant relationship.</p>
+</div>
+<div id="years-lived-there" class="section level4">
+<h4>Years Lived There</h4>
+<p>The move_in independent variable is the number of years the resident(s) have lived in their household. The model suggests that as the number of years lived there increases by one, the gross rent decreases by about 26 dollars. Generally, the longer you’ve lived there, the lower your rent. This is a statistically significant relationship.</p>
+</div>
+<div id="number-of-people" class="section level4">
+<h4>Number of People</h4>
+<p>The num_persons independent variable is the number of people who live in the household. The model suggests that as the number of people increases by one, the rent decreases by 2.6 dollars. But with a p-value of 0.6, this is not even close to being a statistically significant relationship.</p>
+</div>
+<div id="household-type" class="section level4">
+<h4>Household Type</h4>
+<p>The hh_type independent variable consists of four types of households: living alone, married couple, roommates, or single Parent. The model compares the later three types of households to living alone. The model suggests, holding everything else constant, compared to living alone, married couples pay 377 dollars more on rent, roommates pay 669 dollars more on rent, and single parents pay 80 dollars more on rent. These are all statistically significant relationships.</p>
+</div>
+<div id="number-of-units" class="section level4">
+<h4>Number of Units</h4>
+<p>The num_units independent variable consists of five types of buildings, categorized by number of units: single family, 50+ apartments, fewer than 10 apartments, mobile home or vehicle, or ten to 49 apartments. The later four types of buildings are compared to single family homes. The model suggests, holding everything else constant, compared to single family homes, units in 50+ apartment buildings pay 200 dollars more, units in buildings with fewer than 10 apartments pay 120 dollars less, mobile homes or vehicles pay 308 dollars less, and units in buildings with 10-49 apartments pay 32 dollars less. These are all significant relationships except for units in buildings with 10-49 apartments.</p>
+</div>
+<div id="conclusion" class="section level4">
+<h4>Conclusion</h4>
+<p>Just wanted to pop in here to say that I’m surprised by the number of people variable, especially because (intution wise) I thought it would be similar to number of bedrooms. I wonder if it has something to do with the raw data. Also surprised that the age of the building didn’t have more of an impact, but maybe that is because the housing stock across Massachusetts is old, so that isn’t the variable that is changing things? Also, the years lived there seems small, but for the households that have lived there for 30+ years that is quite a difference in rent!</p>
+</div>
 </div>
 
 

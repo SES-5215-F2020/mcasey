@@ -36,28 +36,52 @@ library(dplyr)
 hh_data1 <- read_csv("households_ma.csv") %>%
    mutate(num_units = case_when(
     BLD_label=="2 Apartments"~"Fewer than 10 apartments",
-    BLD_label=="10-19 Apartments"~"10 to 49 apartments",
-    BLD_label=="One-family house detached" ~ "Single-family",
+    BLD_label=="10-19 Apartments"~"Ten to 49 apartments",
+    BLD_label=="One-family house detached" ~ "1Single-family",
     BLD_label=="3-4 Apartments" ~ "Fewer than 10 apartments",
     BLD_label=="Mobile home or trailer" ~ "Mobile home or vehicle",
     BLD_label=="50 or more apartments" ~ "50+ apartments",
-    BLD_label=="20-49 Apartments" ~ "10 to 49 apartments",
+    BLD_label=="20-49 Apartments" ~ "Ten to 49 apartments",
     BLD_label=="5-9 Apartments"~"Fewer than 10 apartments",
-    BLD_label=="One-family house attached" ~ "Single-family",
+    BLD_label=="One-family house attached" ~ "1Single-family",
     BLD_label=="Boat, RV, van, etc." ~ "Mobile home or vehicle")) %>%
   mutate(hh_type = case_when(
-    HHT_label =="Married couple household"~"1Married couple",
+    HHT_label =="Married couple household"~"Married couple",
     HHT_label =="Other family household: Female householder, no spouse present"~"Single Parent",
     HHT_label =="Other family household: Male householder, no spouse present"~"Single Parent",
     HHT_label =="Nonfamily household: Male householder: Not living alone"~"Roommates",
     HHT_label =="Nonfamily household: Female householder: Not living alone"~"Roommates",
-    HHT_label =="Nonfamily household: Female householder: Living alone"~"Living Alone",
-    HHT_label =="Nonfamily household: Male householder: Living alone"~"Living Alone"))
+    HHT_label =="Nonfamily household: Female householder: Living alone"~"1Living Alone",
+    HHT_label =="Nonfamily household: Male householder: Living alone"~"1Living Alone"))
 ```
 
 ```{r}
-model <- lm(gross_rent ~ age_struct + bedrooms + hh_type + num_units, 
+model <- lm(gross_rent ~ age_struct + bedrooms + hh_type + num_units + move_in + num_persons, 
             data = hh_data1)
 
 summary(model)
 ```
+
+### Linear Regression Interpretation
+With an adjusted R Square value of .215, these independent variables explain 22% of the variation in gross rent. The gross rent is per month. Most of the relationships are statistically significant, but apartments in buildings with 10-49 units and the number of people do not have a statistically significant relationship in predicting gross rent. But age of building, number of bedrooms, all types of households, years lived there, and all other building types have a statistically significant relationship in predicting gross rent.
+
+#### Age of Building
+The age_struct independent variable is the age of the building. The model suggests that as the age increases by one year, the gross rent decreases by 1.5 dollars. This is a very small change given the intercept gross rent is 1200 dollars, but generally, the older the house, the lower the rent. This is a statistically significant relationship.
+
+#### Number of Bedrooms
+The bedrooms independent variable is the number of bedrooms in each household. The model suggests that as the number of bedrooms increases by one, the gross rent increases by about 158 dollars. So, the more bedrooms, the higher the rent. This is a statistically significant relationship.
+
+#### Years Lived There
+The move_in independent variable is the number of years the resident(s) have lived in their household. The model suggests that as the number of years lived there increases by one, the gross rent decreases by about 26 dollars. Generally, the longer you've lived there, the lower your rent. This is a statistically significant relationship.
+
+#### Number of People
+The num_persons independent variable is the number of people who live in the household. The model suggests that as the number of people increases by one, the rent decreases by 2.6 dollars. But with a p-value of 0.6, this is not even close to being a statistically significant relationship.
+
+#### Household Type
+The hh_type independent variable consists of four types of households: living alone, married couple, roommates, or single Parent. The model compares the later three types of households to living alone. The model suggests, holding everything else constant, compared to living alone, married couples pay 377 dollars more on rent, roommates pay 669 dollars more on rent, and single parents pay 80 dollars more on rent. These are all statistically significant relationships. 
+
+#### Number of Units
+The num_units independent variable consists of five types of buildings, categorized by number of units: single family, 50+ apartments, fewer than 10 apartments, mobile home or vehicle, or ten to 49 apartments. The later four types of buildings are compared to single family homes. The model suggests, holding everything else constant, compared to single family homes, units in 50+ apartment buildings pay 200 dollars more, units in buildings with fewer than 10 apartments pay 120 dollars less, mobile homes or vehicles pay 308 dollars less, and units in buildings with 10-49 apartments pay 32 dollars less. These are all significant relationships except for units in buildings with 10-49 apartments.
+
+#### Conclusion
+Just wanted to pop in here to say that I'm surprised by the number of people variable, especially because (intution wise) I thought it would be similar to number of bedrooms. I wonder if it has something to do with the raw data. Also surprised that the age of the building didn't have more of an impact, but maybe that is because the housing stock across Massachusetts is old, so that isn't the variable that is changing things? Also, the years lived there seems small, but for the households that have lived there for 30+ years that is quite a difference in rent! 
