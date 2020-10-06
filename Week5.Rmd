@@ -1,0 +1,182 @@
+---
+title: "Assignment 5: Regression Part 2"
+author: "Meghan Casey"
+date: October 8, 2020
+output: 
+  html_document:
+    theme: "cosmo" 
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    highlight: "tango"
+---
+
+### Variables of Interest
+Unit  of analysis: Household
+
+Population: Renters in Massachusetts
+
+1. Household Type (categorical): hh_type
+2. Number of Units within Building (categorical): num_units
+3. Age of Building (continuous): age_struct
+4. Number of Bedrooms (continuous): bedrooms
+5. Number of People (continuous): num_persons
+6. Time Lived There (continuous): move_in
+7. Gross Rent (continuous): gross_rent
+
+I also added a new variable, density which is bedrooms/num_persons, so bedrooms per person.
+
+### Load Libraries
+```{r, message = FALSE}
+library(tidyverse)
+library(jtools)
+library(interactions)
+library(knitr)
+```
+
+### Loading Data
+```{r, message = FALSE}
+hh_data1 <- read_csv("households_ma.csv") %>%
+   mutate(num_units = case_when(
+    BLD_label=="2 Apartments"~"Fewer than 10 apartments",
+    BLD_label=="10-19 Apartments"~"Ten to 49 apartments",
+    BLD_label=="One-family house detached" ~ "1Single-family",
+    BLD_label=="3-4 Apartments" ~ "Fewer than 10 apartments",
+    BLD_label=="Mobile home or trailer" ~ "Mobile home or vehicle",
+    BLD_label=="50 or more apartments" ~ "50+ apartments",
+    BLD_label=="20-49 Apartments" ~ "Ten to 49 apartments",
+    BLD_label=="5-9 Apartments"~"Fewer than 10 apartments",
+    BLD_label=="One-family house attached" ~ "1Single-family",
+    BLD_label=="Boat, RV, van, etc." ~ "Mobile home or vehicle")) %>%
+  mutate(hh_type = case_when(
+    HHT_label =="Married couple household"~"Married couple",
+    HHT_label =="Other family household: Female householder, no spouse present"~"Single Parent",
+    HHT_label =="Other family household: Male householder, no spouse present"~"Single Parent",
+    HHT_label =="Nonfamily household: Male householder: Not living alone"~"NonFamily HH",
+    HHT_label =="Nonfamily household: Female householder: Not living alone"~"NonFamily HH",
+    HHT_label =="Nonfamily household: Female householder: Living alone"~"1Living Alone",
+    HHT_label =="Nonfamily household: Male householder: Living alone"~"1Living Alone"))
+```
+
+#### Initial Regression
+```{r}
+model1 <- lm(gross_rent ~ age_struct + bedrooms + hh_type + num_units + move_in + num_persons, 
+            data = hh_data1)
+
+summary(model1)
+```
+### Additional Models
+#### New Variable
+I replaced num_persons and bedrooms with density.
+```{r}
+model2 <- lm(gross_rent ~ age_struct + density + hh_type + num_units + move_in, 
+            data = hh_data1)
+
+summary(model2)
+```
+
+#### Converting Continuous to Categorical
+I've changed my age_struct variable to a categorical variable of New, Mid and Old aged. This increased the R-Squared from 0.22 to 0.23.
+```{r}
+hh_data2 <- hh_data1 %>%
+  mutate(age_struct = case_when(age_struct <= 15 ~ "1New",
+                                between(age_struct, 16, 79) ~ "Mid Age",
+                                age_struct > 80 ~ "Old"))
+
+model3 <- lm(gross_rent ~ age_struct + bedrooms + hh_type + num_units + move_in + num_persons, 
+            data = hh_data2)
+
+summary(model3)
+```
+
+#### Interaction Term
+I used household type as an interaction term for density.
+
+```{r}
+hh_data3 <- hh_data1 %>%
+  mutate(hh_type = case_when(
+    HHT_label =="Married couple household"~"Family",
+    HHT_label =="Other family household: Female householder, no spouse present"~"Family",
+    HHT_label =="Other family household: Male householder, no spouse present"~"Family",
+    HHT_label =="Nonfamily household: Male householder: Not living alone"~"NonFamily",
+    HHT_label =="Nonfamily household: Female householder: Not living alone"~"NonFamily",
+    HHT_label =="Nonfamily household: Female householder: Living alone"~"NonFamily",
+    HHT_label =="Nonfamily household: Male householder: Living alone"~"NonFamily"))
+
+model4 <- lm(gross_rent ~ age_struct + density + num_units + hh_type + (density:hh_type), 
+            data = hh_data3)
+
+summary(model4)
+```
+
+### Model Fit Visualizations
+```{r}
+ModelFit <- tibble(model = c(1, 2, 3, 4),
+                   R_square = c(summary(model1)$adj.r.squared,
+                                summary(model2)$adj.r.squared,
+                                summary(model3)$adj.r.squared,
+                                summary(model4)$adj.r.squared))
+
+ggplot(ModelFit, aes(x = model, y = R_square)) +
+  geom_line() +
+  scale_x_continuous(name = "",
+                   breaks = breaks <- seq(1, 4, by = 1),
+                   labels = paste("Model", breaks)) +
+  scale_y_continuous(name = "Adjusted R-squared value") +
+  theme_bw()
+
+```
+```{r}
+
+coeff_names <- c("Age of House" = "age_struct",
+                 "Old House" = "age_structOld",
+                 "Mid-Age House" = "age_structMid Age",
+                 "50+ Units" = "num_units50+ apartments",
+                 "<10 Units" = "num_unitsFewer than 10 apartments",
+                 "Mobile Home or Vehicle" = "num_unitsMobile home or vehicle",
+                 "10-49 Units" = "num_unitsTen to 49 apartments",
+                 "Single Parent" = "hh_typeSingle Parent",
+                 "Married Couple" = "hh_typeMarried couple", 
+                 "NonFamily HH" = "hh_typeNonFamily HH",
+                 "Number of Bedrooms" = "bedrooms",
+                 "Number of People" = "num_persons",
+                 "Time Lived There" = "move_in")
+
+export_summs(model1, model3, 
+             error_format = "(p = {p.value})",
+             error_pos = "same",
+             model.names = c("Initial model", "Preferred model"),
+             coefs = coeff_names)
+```
+```{r}
+coeff_desc <- c("Age of House" = "age_struct",
+                 "Old House (compared to New)" = "age_structOld",
+                 "Mid-Age House (compared to New)" = "age_structMid Age",
+                 "50+ Units (compared to single family)" = "num_units50+ apartments",
+                 "<10 Units (compared to single family)" = "num_unitsFewer than 10 apartments",
+                 "Mobile Home or Vehicle (compared to single family)" = "num_unitsMobile home or vehicle",
+                 "10-49 Units (compared to single family)" = "num_unitsTen to 49 apartments",
+                 "Single Parent (compared to Living Alone)" = "hh_typeSingle Parent",
+                 "Married Couple (compared to Living Alone)" = "hh_typeMarried couple", 
+                 "NonFamily HH (compared to Living Alone)" = "hh_typeNonFamily HH",
+                 "Number of Bedrooms" = "bedrooms",
+                 "Number of People" = "num_persons",
+                 "Time Lived There" = "move_in")
+
+plot_coefs(model3, 
+           coefs = coeff_desc,
+           plot.distributions = TRUE,
+           rescale.distributions = TRUE) +
+  scale_x_continuous(name = "Effect on gross rent (dollars)")
+```
+```{r}
+interact_plot(model4, pred = density, modx = hh_type, interval = TRUE) +
+  scale_x_continuous(name = "Density of Household (Bedrooms per Person)",
+                     limits = c(0, 6),
+                     breaks = breaks <- seq(0, 6, by = 1)) +
+  scale_y_continuous(name = "Gross Rent") +
+  scale_color_discrete(name = "") +
+  scale_linetype_discrete(name = "") +
+  scale_fill_discrete(name = "") 
+
+```
